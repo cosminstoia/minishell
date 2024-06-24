@@ -6,11 +6,11 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:41:33 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 10:59:04 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/24 13:20:16 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 // two-dimensional char arrays are freed
 void	ft_free_splits(char **strstr)
@@ -29,23 +29,30 @@ void	ft_free_splits(char **strstr)
 	}
 }
 
-// individual parts of the struct are freed
+// individual parts of the struct are freed in each member of the tok array
 void	ft_free_tok(t_token *tok)
 {
-	if (tok->env_p)
-		ft_free_splits(tok->env_p);
-	if (tok->cmd)
-		ft_free_splits(tok->cmd);
-	if (tok->path)
-		free(tok->path);
-	if (tok->in)
-		free(tok->in);
-	if (tok->out)
-		free(tok->out);
-	if (tok->out)
-		free(tok->out_a);
-	if (tok->out)
-		free(tok->heredoc);
+	int	index;
+
+	index = 0;
+	while (index <= tok->tok_num)
+	{
+		if (tok[index].env_p)
+			ft_free_splits(tok[index].env_p);
+		if (tok[index].cmd)
+			ft_free_splits(tok[index].cmd);
+		if (tok[index].path)
+			free(tok[index].path);
+		if (tok[index].in)
+			free(tok[index].in);
+		if (tok[index].out)
+			free(tok[index].out);
+		if (tok[index].out)
+			free(tok[index].out_a);
+		if (tok[index].out)
+			free(tok[index].heredoc);
+		index++;
+	}
 	free(tok);
 }
 
@@ -56,5 +63,16 @@ void	ft_cleanup(t_token *tok, char *input, int exit_no)
 		free(input);
 	if (tok != NULL)
 		ft_free_tok(tok);
+	exit(exit_no);
+}
+
+// function to replicate the bash command exit
+void	ft_exit(char *input)
+{
+	int	exit_no;
+
+	exit_no = 0;
+	exit_no = ft_atoi(&input[4]);
+	free(input);
 	exit(exit_no);
 }
