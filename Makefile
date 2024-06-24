@@ -1,29 +1,58 @@
-CC			= cc
-NAME		= minishell
-SRCS		= src/minishell.c
-OBJS		= $(SRCS:.c=.o)
-HEAD		= includes/minishell.h
-CFLAGS		= -Wall -Werror -Wextra 
-# -Wunreachable-code
-LIBFT_DIR	= libft
-LIBFT		= $(LIBFT_DIR)/libft.a
+# Program name
+NAME        = minishell
 
-all:	$(NAME)
+# Compiler
+CC          = cc
 
-$(NAME): $(OBJS) $(HEAD) $(LIBFT)
+# Compiling flags
+CFLAGS      = -Wall -Werror -Wextra
+
+# Includes
+INCLUDES    = includes/minishell.h
+
+# Directories
+SRC_DIR     = src
+OBJ_DIR     = obj
+LIBFT_DIR   = libft
+
+# Libft and source files
+LIBFT       = $(LIBFT_DIR)/libft.a
+SRCS        = $(SRC_DIR)/minishell.c
+
+# Objects
+OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+all: $(NAME)
+	@echo "$(NAME) built successfully!"
+
+# Build the project
+$(NAME): $(OBJS) $(INCLUDES) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT) -lreadline
 
+# Compile source files into object files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+
+# Compile libft
 $(LIBFT):
 	@make -C $(LIBFT_DIR)
 
+# Clean the project
 clean:
 	@rm -f $(OBJS)
 	@make clean -C $(LIBFT_DIR)
+	@rmdir $(OBJ_DIR) 2>/dev/null || true
 
-fclean:	clean
+# Clean project and object files
+fclean: clean
 	@rm -f $(NAME)
 	@make fclean -C $(LIBFT_DIR)
 
-re:		fclean all
+# Clean and rebuild project rule
+re: fclean all
 
 .PHONY: all clean fclean re bonus
