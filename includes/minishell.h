@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 18:24:15 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/24 19:37:18 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,13 @@ int		ft_copystr_ms(char **strstr, char *str, char c, int index);
 
 /* fill_tokens.c: functions to fill the tok struct with the data from input */
 t_token	*ft_fill_tok(t_token *tok, char *input, char *tok_str, int index);
+
+/* path.c functions to create the path needed by execve to execute a command */
+int		ft_strcpy_ms(char *cmd, char **path);
+char	*ft_path_name(char *path, char *command, char *str, char c);
+int		ft_pathlen(char *env_path, char *command, int pathlen);
+char	*ft_path_access(t_token *tok, int *sub_index, int index);
+void	ft_print_error(t_token *tok, char *input, char *tok_str, char *path);
+char	*ft_create_path(t_token *tok, char *input, char *tok_str, int index);
 
 #endif
