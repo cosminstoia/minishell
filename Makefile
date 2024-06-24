@@ -17,7 +17,11 @@ LIBFT_DIR   = libft
 
 # Libft and source files
 LIBFT       = $(LIBFT_DIR)/libft.a
-SRCS        = $(SRC_DIR)/minishell.c
+SRCS        = 	$(SRC_DIR)/minishell.c \
+				$(SRC_DIR)/redirections.c \
+				$(SRC_DIR)/signals.c \
+				$(SRC_DIR)/builtins.c \
+				$(SRC_DIR)/cleanup.c \
 
 # Objects
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
