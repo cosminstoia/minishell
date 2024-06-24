@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 11:02:26 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/24 11:13:48 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,12 @@ void							ft_handle_sig(int signum);
 
 /* redirections.c: function to handle the redirections */
 void							ft_redirect(t_token *tok);
+
+
+/* builtins.c: functions to handle the builtin functions */
+void							ft_execute_echo(char **args);
+void							ft_execute_cd(char *directory);
+void							ft_execute_export(char **args);
 
 /* cleanup.c: functions to free allocated memory and exit minishell */
 void	ft_free_splits(char **array);
