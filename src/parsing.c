@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:27:39 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 15:06:50 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/24 18:25:31 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ t_token	*ft_make_toks(t_token *tok, char *input, char *tok_str, int tok_no)
 		if (tok_str == NULL)
 			ft_cleanup(tok, input, errno);
 		i = ft_cpy_tok_str(input, tok_str, i);
-		// tok = ft_fill_tok(tok, input, tok_str, index);
+		tok = ft_fill_tok(tok, input, tok_str, index);
 		index++;
 	}
 	return (tok);
