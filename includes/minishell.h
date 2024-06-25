@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
 /*   Updated: 2024/06/25 15:24:20 by gstronge         ###   ########.fr       */
@@ -14,14 +14,14 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include <errno.h>				//needed for error numbers/messages
-# include <fcntl.h>				//needed for open/read/write
-# include <stdio.h>				//needed for the readline library
-# include <readline/history.h>	//needed for history function
-# include <readline/readline.h>	//needed for readline function
-# include <signal.h>			//needed for signals
-# include <stdlib.h>			//needed for malloc/free functions
-# include <sys/wait.h>			//needed for wait functions
+# include <errno.h>             //needed for error numbers/messages
+# include <fcntl.h>             //needed for open/read/write
+# include <stdio.h>             //needed for the readline library
+# include <readline/history.h>  //needed for history function
+# include <readline/readline.h> //needed for readline function
+# include <signal.h>            //needed for signals
+# include <stdlib.h>            //needed for malloc/free functions
+# include <sys/wait.h>          //needed for wait functions
 
 extern volatile sig_atomic_t	got_sig;
 
