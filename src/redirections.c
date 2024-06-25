@@ -6,11 +6,11 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/24 09:58:31 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/25 10:35:18 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 // If there is an infile, the function changes the fd of the infile to 0(stdin)
 static void	ft_handle_infile(t_token *tok, int in_fd)

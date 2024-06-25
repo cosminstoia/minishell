@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 13:21:21 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/25 10:35:28 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,22 @@ int	main(void)
 	tok = NULL;
 	while (1)
 	{
+		ft_handle_sig();
 		input = readline("minishell: ");
+		if (input == NULL)
+			break ;
 		if (input)
-		{	
+		{
 			add_history(input);
 			// ft_input_error(input);
 			// if (!ft_strncmp("minishell", input, 10))
 			// 	ft_new_shell();
 			if (!ft_strncmp("exit", input, 4))
-			 	ft_exit(input);
+				ft_exit(input);
 			else
 			{
 				tok = ft_parse_input(tok, input);
-			// 	ft_exec_cmds(tok, input);
+				// 	ft_exec_cmds(tok, input);
 				ft_free_tok(tok);
 			}
 		}
