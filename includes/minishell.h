@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/25 15:24:20 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:08:23 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ void		ft_handle_sig(void);
 
 /* redirections.c: function to handle the redirections */
 void		ft_redirect(t_token *tok);
+
+/* execute.c: function to handle the execution */
+void		ft_exec_cmds(t_token *tok, char *input);
 
 /* builtins.c: functions to handle the builtin functions */
 void		ft_execute_echo(char **args);

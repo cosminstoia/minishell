@@ -25,6 +25,7 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/split.c \
 				$(SRC_DIR)/fill_tokens.c \
 				$(SRC_DIR)/path.c \
+				$(SRC_DIR)/execute.c \
 				# $(SRC_DIR)/builtins.c \
 
 # Objects
