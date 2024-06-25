@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:41:33 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 13:20:16 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:04:34 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_free_tok(t_token *tok)
 	int	index;
 
 	index = 0;
-	while (index <= tok->tok_num)
+	while (index < tok->tok_num)
 	{
 		if (tok[index].env_p)
 			ft_free_splits(tok[index].env_p);

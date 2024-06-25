@@ -6,12 +6,13 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:18:47 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/25 15:19:08 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:03:30 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// function that splits a string into an array of strings, with a char seperator
 char	**ft_split_ms(char *str, char c)
 {
 	char	**strstr;
@@ -49,6 +50,8 @@ char	**ft_split_ms(char *str, char c)
 	return (strstr);
 }
 
+// function to move the index to the closing quote symbol when an opening
+// quote symbol is found in the input string
 int	ft_skip_quotes(char *str, int i)
 {
 	if (str[i] == '\'')
@@ -68,6 +71,8 @@ int	ft_skip_quotes(char *str, int i)
 	return (i);
 }
 
+// function to move the index to the end of the filename when a redirection
+// symbol is found in the input string
 int	ft_skip_redir(char *str, int i)
 {
 	while (str[i] == '>' || str[i] == '<' || str[i] == ' ')
@@ -76,14 +81,13 @@ int	ft_skip_redir(char *str, int i)
 		i = ft_skip_quotes(str, i);
 	else
 	{
-		while (str[i] == ' ')
-			i++;
 		while (str[i] != '\0' && str[i] != ' ')
 			i++;
 	}
 	return(i);
 }
 
+// function to count the number of strings that should be included in the array
 int	ft_strnum_ms(char *str, char c, int strnum)
 {
 	int	i;
@@ -103,7 +107,7 @@ int	ft_strnum_ms(char *str, char c, int strnum)
 		else if (str[i] != c)
 		{
 			strnum++;
-			while (str[i] != '\0' && str[i] != c && str[i] != '>' && str[i] != '<' && str[i] != '\'' & str[i] != '"')
+			while (str[i] != '\0' && str[i] != c && str[i] != '>' && str[i] != '<' && str[i] != '\'' && str[i] != '"')
 				i++;
 		}
 		if (str[i] != '\0')
@@ -112,6 +116,7 @@ int	ft_strnum_ms(char *str, char c, int strnum)
 	return (strnum);
 }
 
+// function to calculate how long the string should be
 int	ft_strlen_ms(char *str, char c, int strlen)
 {
 	if (str[strlen] == '\'')
@@ -132,6 +137,9 @@ int	ft_strlen_ms(char *str, char c, int strlen)
 	return (strlen);
 }
 
+// function to copy a new string from the input string and return the index of
+// the input string at the location where the copying stopped (i.e. the end of
+// the command or flag).
 int	ft_copystr_ms(char **strstr, char *str, char c, int index)
 {
 	int	strlen;
@@ -141,6 +149,8 @@ int	ft_copystr_ms(char **strstr, char *str, char c, int index)
 	strlen = 0;
 	i = 0;
 	j = 0;
+	if (str[i] == '$')
+		return (ft_env_var(strstr, str, c, index));
 	strlen = ft_strlen_ms(str, c, strlen);
 	strstr[index] = (char *)malloc((strlen + 1) * sizeof(char));
 	if (strstr[index] == NULL)
@@ -157,4 +167,31 @@ int	ft_copystr_ms(char **strstr, char *str, char c, int index)
 	if (j > i)
 		j++;
 	return (j);
+}
+
+// function to create a string of an environment variable whenever a $
+// symbol is found in the input string
+int	ft_env_var(char **strstr, char *str, char c, int index)
+{
+	char	*temp_str;
+	int		strlen;
+	int		i;
+
+	strlen = 0;
+	i = 0;
+	while (str[strlen] != '\0' && str[strlen] != c)
+		strlen++;
+	strlen++;
+	temp_str = (char *)malloc(strlen * sizeof(char));
+	if (temp_str == NULL)
+		return (-1);
+	while (i < strlen - 1)
+	{
+		temp_str[i] = str[i + 1]; 
+		i++;
+	}
+	temp_str[i] = '\0';
+	strstr[index] = ft_strdup(getenv(temp_str));
+	free(temp_str);
+	return (strlen);
 }
