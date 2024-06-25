@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:18:47 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 17:38:43 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/25 15:19:08 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	ft_strnum_ms(char *str, char c, int strnum)
 	while (str[i] != '\0')
 	{
 		if (str[i] == '>' || str[i] == '<')
-			ft_skip_redir(str, i);
+			i = ft_skip_redir(str, i);
 		else if (str[i] == '\'' || str[i] == '"')
 		{
 			strnum++;
