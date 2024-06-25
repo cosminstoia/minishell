@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 19:33:35 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/25 15:18:18 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	*ft_path_access(t_token *tok, int *sub_index, int index)
 
 // function to print an error message if all potential path locations have been
 // tested and none resulted in an executable file
-void	ft_print_error(t_token *tok, char *input, char *tok_str, char *path)
+void	ft_print_err(t_token *tok, char *input, char *tok_str, char *path)
 {
 	char	*error;
 	int		pathlen;
@@ -124,7 +124,7 @@ void	ft_print_error(t_token *tok, char *input, char *tok_str, char *path)
 }
 
 // function to create a path to be used by execve to execute the command
-char	*ft_create_path(t_token *tok, char *input, char *tok_str, int index)
+char	*ft_make_path(t_token *tok, char *input, char *tok_str, int index)
 {
 	int	sub_index;
 	int	error;
@@ -146,7 +146,7 @@ char	*ft_create_path(t_token *tok, char *input, char *tok_str, int index)
 			ft_cleanup(tok, input, errno);
 		}
 		if (access(tok[index].cmd[0], X_OK) == -1)
-			ft_print_error(tok, input, tok_str, tok[index].path);
+			ft_print_err(tok, input, tok_str, tok[index].path);
 	}
 	return (tok[index].path);
 }
