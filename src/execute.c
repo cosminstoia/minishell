@@ -6,13 +6,13 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/25 19:15:33 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/25 20:32:38 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_exec_cmds(t_token *tok, char *input)
+static void	ft_execute_nonbuiltins(t_token *tok, char *input)
 {
 	extern char	**environ;
 	int			*status;
@@ -24,4 +24,16 @@ void	ft_exec_cmds(t_token *tok, char *input)
 	if (tok->pid == 0)
 		execve(tok->path, tok->cmd, environ);
 	waitpid(tok->pid, status, 0);
+}
+
+void	ft_execute(t_token *tok, char *input)
+{
+	(void)input;
+	ft_handle_sig();
+	if (ft_strncmp(tok->cmd[0], "echo", 5) == 0)
+		ft_execute_echo(tok);
+	else if (ft_strncmp(tok->cmd[0], "cd", 3) == 0)
+		ft_execute_cd(tok);
+	else
+		ft_execute_nonbuiltins(tok, input);
 }
