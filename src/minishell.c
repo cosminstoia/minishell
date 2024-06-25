@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/25 10:35:28 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/25 20:03:11 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	main(void)
 	tok = NULL;
 	while (1)
 	{
-		ft_handle_sig();
 		input = readline("minishell: ");
 		if (input == NULL)
 			break ;
@@ -35,7 +34,7 @@ int	main(void)
 			else
 			{
 				tok = ft_parse_input(tok, input);
-				// 	ft_exec_cmds(tok, input);
+				ft_execute(tok, input);
 				ft_free_tok(tok);
 			}
 		}

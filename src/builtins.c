@@ -6,101 +6,96 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/24 11:13:53 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/25 22:06:34 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 // Function to execute the "echo" and "echo -n" command
-void	ft_execute_echo(char **args)
+void	ft_execute_echo(t_token *tok)
 {
 	int	i;
 	int	newline;
 
 	i = 1;
 	newline = 1;
-	if (args[i] && strcmp(args[i], "-n") == 0)
+	if (tok->cmd[i] && ft_strncmp(tok->cmd[i], "-n", 3) == 0)
 	{
 		newline = 0;
 		i++;
 	}
-	while (args[i])
+	while (tok->cmd[i])
 	{
-		printf("%s", args[i]);
-		if (args[i + 1])
-			printf(" ");
+		ft_putstr_fd(tok->cmd[i], STDOUT_FILENO);
+		if (tok->cmd[i + 1])
+			write(1, " ", 1);
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		write(1, "\n", 1);
 }
 
 // Function to execute the "cd" command in the parent process
-void	ft_execute_cd(char *directory)
+void	ft_execute_cd(t_token *tok)
 {
-	if (chdir(directory) != 0)
-		printf("Error; chdir failed");
-}
+	char	*target_directory;
+	char	*current_directory;
 
-// Function to execute the "export" command
-void	ft_execute_export(char **args)
-{
-	extern char	**environ;
-	char		*var_value;
-	char		*equal_sign;
-	char		*var_name;
-	char		*value;
-	int			i;
-
-	i = 0;
-	if (args[1] == NULL)
+	target_directory = NULL;
+	if (tok->cmd[1] != NULL && strncmp(tok->cmd[1], "-", 2) == 0)
 	{
-		while (environ[i] != NULL)
-		{
-			printf("%s\n", environ[i]);
-			i++;
-		}
+		target_directory = getenv("OLDPWD");
+		if (target_directory == NULL)
+			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
+		printf("%s\n", target_directory);
+	}
+	else if (tok->cmd[1] == NULL || strncmp(tok->cmd[1], "~", 2) == 0)
+	{
+		target_directory = getenv("HOME");
+		if (target_directory == NULL)
+			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+	}
+	else
+		target_directory = tok->cmd[1];
+	current_directory = getcwd(NULL, 0);
+	if (chdir(target_directory) != 0)
+	{
+		perror("chdir");
 		return ;
 	}
-	var_value = args[1];
-	equal_sign = ft_strchr(var_value, '=');
-	if (equal_sign == NULL)
-	{
-		printf("export: invalid format. Use export VAR=value\n");
-		return ;
-	}
-	*equal_sign = '\0';
-	var_name = var_value;
-	value = equal_sign + 1;
-	if (setenv(var_name, value, 1) != 0)
-		printf("export: failed to set %s\n");
 }
 
-// int	main(int argc, char *argv[])
+// // Function to execute the "export" command
+// void	ft_execute_export(char **args)
 // {
-// 	if (argc < 2)
+// 	extern char	**environ;
+// 	char		*var_value;
+// 	char		*equal_sign;
+// 	char		*var_name;
+// 	char		*value;
+// 	int			i;
+
+// 	i = 0;
+// 	if (args[1] == NULL)
 // 	{
-// 		fprintf(stderr, "Usage: %s <command> [arguments]\n", argv[0]);
-// 		return (1);
-// 	}
-// 	if (strcmp(argv[1], "cd") == 0)
-// 	{
-// 		if (argc < 3)
+// 		while (environ[i] != NULL)
 // 		{
-// 			fprintf(stderr, "cd: missing argument\n");
-// 			return (1);
+// 			printf("%s\n", environ[i]);
+// 			i++;
 // 		}
-// 		ft_execute_cd(argv[2]);
+// 		return ;
 // 	}
-// 	else if (strcmp(argv[1], "echo") == 0)
-// 		ft_execute_echo(argv);
-// 	else if (strcmp(argv[1], "export") == 0)
-// 		ft_execute_export(argv);
-// 	else
+// 	var_value = args[1];
+// 	equal_sign = ft_strchr(var_value, '=');
+// 	if (equal_sign == NULL)
 // 	{
-// 		fprintf(stderr, "Unknown command: %s\n", argv[1]);
-// 		return (1);
+// 		printf("export: invalid format. Use export VAR=value\n");
+// 		return ;
 // 	}
-// 	return (0);
+// 	*equal_sign = '\0';
+// 	var_name = var_value;
+// 	value = equal_sign + 1;
+// 	if (setenv(var_name, value, 1) != 0)
+// 		printf("export: failed to set %s\n");
 // }
