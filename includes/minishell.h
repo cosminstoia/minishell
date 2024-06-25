@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/25 19:08:23 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/25 19:16:56 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ void		ft_exit(char *input);
 
 /* parsing.c: functions to parse the user input and create tokens of commands */
 t_token		*ft_parse_input(t_token *tok, char *input);
-int			ft_token_num(char *input, int tok_no);
-t_token		*ft_init_toks(t_token *tok, int tok_num);
+int			ft_token_num(char *input, int tok_num);
+t_token		*ft_init_tok(t_token *tok, int tok_num, int index);
 int			ft_cpy_tok_str(char *input, char *tok_str, int i);
 t_token		*ft_make_toks(t_token *tok, char *input, char *tok_str, int tok_no);
 
@@ -73,6 +73,7 @@ int			ft_skip_quotes(char *str, int i);
 int			ft_strnum_ms(char *str, char c, int strnum);
 int			ft_strlen_ms(char *str, char c, int strlen);
 int			ft_copystr_ms(char **strstr, char *str, char c, int index);
+int			ft_env_var(char **strstr, char *str, char c, int index);
 
 /* fill_tokens.c: functions to fill the tok struct with the data from input */
 t_token		*ft_fill_tok(t_token *tok, char *input,	char *tok_str, int index);

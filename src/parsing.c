@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:27:39 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/24 18:25:31 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:10:00 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_token	*ft_parse_input(t_token *tok, char *input)
 }
 
 // function that uses the input string to find the number of tokens required
-int	ft_token_num(char *input, int tok_no)
+int	ft_token_num(char *input, int tok_num)
 {
 	int i;
 
@@ -38,7 +38,7 @@ int	ft_token_num(char *input, int tok_no)
 	while (input[i] == ' ' || input[i] == '\t')
 		i++;
 	if (input[i] != '\0')
-		tok_no++;
+		tok_num++;
 	while (input[i] != '\0')
 	{
 		if (input[i] == '\'')
@@ -54,29 +54,23 @@ int	ft_token_num(char *input, int tok_no)
 				i++;
 		}
 		else if (input[i] == '|' && input[i + 1] != '|')
-			tok_no++;
+			tok_num++;
 		i++;
 	}
-	return (tok_no);
+	return (tok_num);
 }
 
-// function to cycle through the tokens and innitialise the structs' variables
-t_token	*ft_init_toks(t_token *tok, int tok_num)
+// function to initialise the structs' variables
+t_token	*ft_init_tok(t_token *tok, int tok_num, int index)
 {
-	int	index;
-
-	index = 0;
-	while (index < tok_num)
-	{	
-		tok[index].env_p = NULL;
-		tok[index].cmd = NULL;
-		tok[index].path = NULL;
-		tok[index].in = NULL;
-		tok[index].out = NULL;
-		tok[index].out_a = NULL;
-		tok[index].heredoc = NULL;
-		tok[index].tok_num = tok_num;
-	}
+	tok[index].env_p = NULL;
+	tok[index].cmd = NULL;
+	tok[index].path = NULL;
+	tok[index].in = NULL;
+	tok[index].out = NULL;
+	tok[index].out_a = NULL;
+	tok[index].heredoc = NULL;
+	tok[index].tok_num = tok_num;
 	return (tok);
 }
 
@@ -99,7 +93,7 @@ int	ft_cpy_tok_str(char *input, char *tok_str, int i)
 }
 
 // function to make all structs of tokens in the tok_array
-t_token	*ft_make_toks(t_token *tok, char *input, char *tok_str, int tok_no)
+t_token	*ft_make_toks(t_token *tok, char *input, char *tok_str, int tok_num)
 {
 	int	index;
 	int	len;
@@ -107,7 +101,7 @@ t_token	*ft_make_toks(t_token *tok, char *input, char *tok_str, int tok_no)
 
 	index = 0;
 	i = 0;
-	while (index < tok_no)
+	while (index < tok_num)
 	{
 		len = 0;
 		if (tok_str != NULL)
@@ -118,8 +112,10 @@ t_token	*ft_make_toks(t_token *tok, char *input, char *tok_str, int tok_no)
 		if (tok_str == NULL)
 			ft_cleanup(tok, input, errno);
 		i = ft_cpy_tok_str(input, tok_str, i);
+		tok = ft_init_tok(tok, tok_num, index);
 		tok = ft_fill_tok(tok, input, tok_str, index);
 		index++;
 	}
+	free(tok_str);
 	return (tok);
 }
