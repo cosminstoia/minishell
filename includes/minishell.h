@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
 /*   Updated: 2024/06/26 19:18:48 by gstronge         ###   ########.fr       */
@@ -60,10 +60,14 @@ void		ft_handle_sig(void);
 /* redirections.c: function to handle the redirections */
 void		ft_redirect(t_token *tok);
 
+/* execute.c: function to handle the execution */
+void		ft_exec_cmds(t_token *tok, char *input);
+
 /* builtins.c: functions to handle the builtin functions */
-void		ft_execute_echo(char **args);
-void		ft_execute_cd(char *directory);
-void		ft_execute_export(char **args);
+void		ft_execute(t_token *tok, char *input);
+void		ft_execute_echo(t_token *tok);
+void		ft_execute_cd(t_token *tok);
+//void		ft_execute_export(char **args);
 
 /* cleanup.c: functions to free allocated memory and exit minishell */
 void		ft_free_splits(char **array);
