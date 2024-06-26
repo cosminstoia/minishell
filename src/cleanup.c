@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:41:33 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/25 19:04:34 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/26 19:23:49 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,13 @@ void	ft_free_splits(char **strstr)
 }
 
 // individual parts of the struct are freed in each member of the tok array
-void	ft_free_tok(t_token *tok)
+void	ft_free_tok(t_token *tok, t_cnst *consts)
 {
 	int	index;
 
 	index = 0;
-	while (index < tok->tok_num)
+	while (index < consts->tok_num)
 	{
-		if (tok[index].env_p)
-			ft_free_splits(tok[index].env_p);
 		if (tok[index].cmd)
 			ft_free_splits(tok[index].cmd);
 		if (tok[index].path)
@@ -56,23 +54,35 @@ void	ft_free_tok(t_token *tok)
 	free(tok);
 }
 
-// all allocated memory will be freed and minishell will exit cleanly
-void	ft_cleanup(t_token *tok, char *input, int exit_no)
+// individual parts of the consts struct are freed and then the struct itself
+void	ft_free_const(t_cnst *consts)
 {
-	if (input != NULL)
-		free(input);
+	if (consts->environ != NULL)
+		ft_free_splits(consts->environ);
+	if (consts->env_p)
+		ft_free_splits(consts->env_p);
+	if (consts->input != NULL)
+		free(consts->input);
+	free(consts);
+}
+
+// all allocated memory will be freed and minishell will exit cleanly
+void	ft_cleanup(t_token *tok, t_cnst *consts, int exit_no)
+{
 	if (tok != NULL)
-		ft_free_tok(tok);
+		ft_free_tok(tok, consts);
+	if (consts != NULL)
+		ft_free_const(consts);
 	exit(exit_no);
 }
 
 // function to replicate the bash command exit
-void	ft_exit(char *input)
+void	ft_exit(t_cnst *consts)
 {
 	int	exit_no;
 
 	exit_no = 0;
-	exit_no = ft_atoi(&input[4]);
-	free(input);
+	exit_no = ft_atoi(&consts->input[4]);
+	ft_free_const(consts);
 	exit(exit_no);
 }
