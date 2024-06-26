@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/25 19:02:13 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/26 19:18:48 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,34 @@
 
 extern volatile sig_atomic_t	got_sig;
 
+/* struct with all the variables required to execute one command */
 typedef struct s_token
 {
-	char						**env_p;
 	char						**cmd;
 	char						*path;
 	char						*in;
 	char						*out;
 	char						*out_a;
 	char						*heredoc;
-	int							tok_num;
 	pid_t						pid;
 }								t_token;
 
+/* struct with the variables that stay constant no matter which command is 
+being executed */
+typedef struct s_cnst
+{
+	char						**environ;
+	char						**env_p;
+	char						*input;
+	int							tok_num;
+}								t_cnst;
+
 /* Functions prototypes */
+
+/* minishell.c : */
+t_cnst		*ft_make_consts(t_cnst *consts, char **env);
+char		*ft_return_env_var(t_cnst *consts, char *find_str);
+char		**ft_make_env_path(t_token *tok, t_cnst *consts);
 
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);
@@ -53,16 +67,17 @@ void		ft_execute_export(char **args);
 
 /* cleanup.c: functions to free allocated memory and exit minishell */
 void		ft_free_splits(char **array);
-void		ft_free_tok(t_token *tok);
-void		ft_cleanup(t_token *tok, char *input, int exit_no);
-void		ft_exit(char *input);
+void		ft_free_tok(t_token *tok, t_cnst *consts);
+void		ft_free_const(t_cnst *consts);
+void		ft_cleanup(t_token *tok, t_cnst *consts, int exit_no);
+void		ft_exit(t_cnst *consts);
 
 /* parsing.c: functions to parse the user input and create tokens of commands */
-t_token		*ft_parse_input(t_token *tok, char *input);
+t_token		*ft_parse_input(t_token *tok, t_cnst *consts);
 int			ft_token_num(char *input, int tok_num);
-t_token		*ft_init_tok(t_token *tok, int tok_num, int index);
+t_token		*ft_init_tok(t_token *tok, int index);
 int			ft_cpy_tok_str(char *input, char *tok_str, int i);
-t_token		*ft_make_toks(t_token *tok, char *input, char *tok_str, int tok_no);
+t_token		*ft_make_toks(t_token *tok, t_cnst *consts, char *tok_str, int tok_no);
 
 /* split.c: functions to split env PATH and commands into an array of strings*/
 char		**ft_split_ms(char *str, char c);
@@ -73,16 +88,16 @@ int			ft_copystr_ms(char **strstr, char *str, char c, int index);
 int			ft_env_var(char **strstr, char *str, char c, int index);
 
 /* fill_tokens.c: functions to fill the tok struct with the data from input */
-t_token		*ft_fill_tok(t_token *tok, char *input,	char *tok_str, int index);
-void		ft_redir_file(t_token *tok, char *input, char *tok_str, int index);
-char		*ft_cpy_redir(t_token *tok, char *input, char *tok_str, char *str);
+t_token		*ft_fill_tok(t_token *tok, t_cnst *consts,	char *tok_str, int index);
+void		ft_redir_file(t_token *tok, t_cnst *consts, char *tok_str, int index);
+char		*ft_cpy_redir(t_token *tok, t_cnst *consts, char *tok_str, char *str);
 
 /* path.c functions to create the path needed by execve to execute a command */
 int			ft_strcpy_ms(char *cmd, char **path);
 char		*ft_path_name(char *path, char *command, char *str, char c);
 int			ft_pathlen(char *env_path, char *command, int pathlen);
-char		*ft_path_access(t_token *tok, int *sub_index, int index);
-void		ft_print_err(t_token *tok, char *input, char *tok_str, char *path);
-char		*ft_make_path(t_token *tok, char *input, char *tok_str, int index);
+char		*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index);
+void		ft_print_err(t_token *tok, t_cnst *consts, char *tok_str, char *path);
+char		*ft_make_path(t_token *tok, t_cnst *consts, char *tok_str, int index);
 
 #endif
