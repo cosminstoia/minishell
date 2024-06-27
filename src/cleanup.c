@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:41:33 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/26 19:23:49 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:45:20 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,5 @@ void	ft_cleanup(t_token *tok, t_cnst *consts, int exit_no)
 		ft_free_tok(tok, consts);
 	if (consts != NULL)
 		ft_free_const(consts);
-	exit(exit_no);
-}
-
-// function to replicate the bash command exit
-void	ft_exit(t_cnst *consts)
-{
-	int	exit_no;
-
-	exit_no = 0;
-	exit_no = ft_atoi(&consts->input[4]);
-	ft_free_const(consts);
 	exit(exit_no);
 }

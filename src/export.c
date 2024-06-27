@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/27 13:52:03 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:48:57 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,15 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 	new_var[var_len] = '=';
 	ft_strlcpy(new_var + var_len + 1, value, value_len + 1);
 	ft_add_var(consts, new_var, i);
+}
+
+// Function to replicate the bash command exit
+void	ft_execute_exit(t_token *tok, t_cnst *consts)
+{
+	int	exit_no;
+
+	exit_no = 0;
+	exit_no = ft_atoi(&consts->input[4]);
+	ft_cleanup(tok, consts, exit_no);
+	exit(exit_no);
 }
