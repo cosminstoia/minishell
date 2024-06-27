@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/25 22:06:34 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/27 13:52:21 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,21 @@ void	ft_execute_echo(t_token *tok)
 }
 
 // Function to execute the "cd" command in the parent process
-void	ft_execute_cd(t_token *tok)
+void	ft_execute_cd(t_token *tok, t_cnst *consts)
 {
 	char	*target_directory;
 	char	*current_directory;
 
 	target_directory = NULL;
-	if (tok->cmd[1] != NULL && strncmp(tok->cmd[1], "-", 2) == 0)
+	if (tok->cmd[1] != NULL && ft_strncmp(tok->cmd[1], "-", 2) == 0)
 	{
-		target_directory = getenv("OLDPWD");
+		target_directory = ft_return_env_var(consts, "OLDPWD");
 		if (target_directory == NULL)
 			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
-		printf("%s\n", target_directory);
+		else
+			printf("%s\n", target_directory);
 	}
-	else if (tok->cmd[1] == NULL || strncmp(tok->cmd[1], "~", 2) == 0)
+	else if (tok->cmd[1] == NULL || ft_strncmp(tok->cmd[1], "~", 2) == 0)
 	{
 		target_directory = getenv("HOME");
 		if (target_directory == NULL)
@@ -66,36 +67,59 @@ void	ft_execute_cd(t_token *tok)
 	}
 }
 
-// // Function to execute the "export" command
-// void	ft_execute_export(char **args)
-// {
-// 	extern char	**environ;
-// 	char		*var_value;
-// 	char		*equal_sign;
-// 	char		*var_name;
-// 	char		*value;
-// 	int			i;
+// Function to execute the "pwd" command
+void	ft_execute_pwd(void)
+{
+	char	cwd[PATH_MAX];
 
-// 	i = 0;
-// 	if (args[1] == NULL)
-// 	{
-// 		while (environ[i] != NULL)
-// 		{
-// 			printf("%s\n", environ[i]);
-// 			i++;
-// 		}
-// 		return ;
-// 	}
-// 	var_value = args[1];
-// 	equal_sign = ft_strchr(var_value, '=');
-// 	if (equal_sign == NULL)
-// 	{
-// 		printf("export: invalid format. Use export VAR=value\n");
-// 		return ;
-// 	}
-// 	*equal_sign = '\0';
-// 	var_name = var_value;
-// 	value = equal_sign + 1;
-// 	if (setenv(var_name, value, 1) != 0)
-// 		printf("export: failed to set %s\n");
-// }
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	{
+		ft_putstr_fd(cwd, STDOUT_FILENO);
+		write(1, "\n", 1);
+	}
+	else
+		perror("getcwd() error");
+}
+
+// Function to execute the "env" command
+void	ft_execute_env(t_cnst *consts)
+{
+	char	**env;
+
+	env = consts->environ;
+	while (*env)
+	{
+		printf("%s\n", *env);
+		env++;
+	}
+}
+
+// Function to unset an environment variable
+void	ft_execute_unset(t_token *tok, t_cnst *consts)
+{
+	int		i;
+	int		j;
+	size_t	len;
+
+	i = 0;
+	j = 0;
+	if (!tok->cmd[1])
+		return ;
+	len = ft_strlen(tok->cmd[1]);
+	while (consts->environ[i])
+	{
+		if (ft_strncmp(consts->environ[i], tok->cmd[1], len) == 0
+			&& consts->environ[i][len] == '=')
+		{
+			free(consts->environ[i]);
+			j = i;
+			while (consts->environ[j])
+			{
+				consts->environ[j] = consts->environ[j + 1];
+				j++;
+			}
+		}
+		else
+			i++;
+	}
+}

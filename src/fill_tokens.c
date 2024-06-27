@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:15:31 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/26 19:24:48 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/27 13:56:28 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_token	*ft_fill_tok(t_token *tok, t_cnst *consts, char *tok_str, int index)
 		free(tok_str);
 		ft_cleanup(tok, consts, errno);
 	}
-	tok[index].path = ft_make_path(tok, consts, tok_str, index);
 	ft_redir_file(tok, consts, tok_str, index);
 	return (tok);
 }

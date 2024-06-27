@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/26 19:18:48 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/06/27 13:13:00 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <signal.h>            //needed for signals
 # include <stdlib.h>            //needed for malloc/free functions
 # include <sys/wait.h>          //needed for wait functions
+# include <limits.h>
 
 extern volatile sig_atomic_t	got_sig;
 
@@ -61,13 +62,16 @@ void		ft_handle_sig(void);
 void		ft_redirect(t_token *tok);
 
 /* execute.c: function to handle the execution */
-void		ft_exec_cmds(t_token *tok, char *input);
+void		ft_execute(t_token *tok, t_cnst *consts);
 
 /* builtins.c: functions to handle the builtin functions */
-void		ft_execute(t_token *tok, char *input);
+void		ft_execute(t_token *tok, t_cnst *consts);
 void		ft_execute_echo(t_token *tok);
-void		ft_execute_cd(t_token *tok);
-//void		ft_execute_export(char **args);
+void		ft_execute_cd(t_token *tok, t_cnst *consts);
+void		ft_execute_pwd(void);
+void		ft_execute_env(t_cnst *consts);
+void		ft_execute_unset(t_token *tok, t_cnst *consts);
+void		ft_execute_export(t_token *tok, t_cnst *consts);
 
 /* cleanup.c: functions to free allocated memory and exit minishell */
 void		ft_free_splits(char **array);
