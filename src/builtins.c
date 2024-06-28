@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/27 13:52:21 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/28 19:37:08 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,5 +121,10 @@ void	ft_execute_unset(t_token *tok, t_cnst *consts)
 		}
 		else
 			i++;
+	}
+	if (ft_strncmp(tok->cmd[1], "PATH", 5) == 0)
+	{
+		ft_free_splits(consts->env_p);
+		consts->env_p = NULL;
 	}
 }

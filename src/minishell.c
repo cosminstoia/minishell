@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/28 15:27:10 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/28 20:32:34 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	main(int argc, char **argv, char **env)
 			ft_putstr_fd("exit\n", STDOUT_FILENO);
 			break ;
 		}
-		// if (consts->input == NULL)
-		// 	ft_input_null();
 		if (consts->input)
 		{
 			add_history(consts->input);
