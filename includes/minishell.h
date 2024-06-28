@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/27 13:13:00 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:48:57 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,13 @@ void		ft_redirect(t_token *tok);
 void		ft_execute(t_token *tok, t_cnst *consts);
 
 /* builtins.c: functions to handle the builtin functions */
-void		ft_execute(t_token *tok, t_cnst *consts);
 void		ft_execute_echo(t_token *tok);
 void		ft_execute_cd(t_token *tok, t_cnst *consts);
 void		ft_execute_pwd(void);
 void		ft_execute_env(t_cnst *consts);
 void		ft_execute_unset(t_token *tok, t_cnst *consts);
 void		ft_execute_export(t_token *tok, t_cnst *consts);
+void		ft_execute_exit(t_token *tok, t_cnst *consts);
 
 /* cleanup.c: functions to free allocated memory and exit minishell */
 void		ft_free_splits(char **array);

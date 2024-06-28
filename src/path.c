@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/27 13:55:46 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:13:18 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	ft_print_err(t_token *tok, t_cnst *consts, char *tok_str, char *path)
 	int		pathlen;
 
 	pathlen = 0;
-	pathlen = ft_pathlen("command ^^not found:", path, pathlen);
+	pathlen = ft_pathlen("command not found:", path, pathlen);
 	error = (char *)malloc(pathlen * sizeof(char));
 	if (error == NULL)
 	{
@@ -120,7 +120,7 @@ void	ft_print_err(t_token *tok, t_cnst *consts, char *tok_str, char *path)
 			free(tok_str);
 		ft_cleanup(tok, consts, errno);
 	}
-	error = ft_path_name("command $$not found:", path, error, ' ');
+	error = ft_path_name("command not found:", path, error, ' ');
 	ft_putstr_fd(error, 1);
 	ft_putstr_fd("\n", 1);
 	free(error);

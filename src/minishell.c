@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/27 12:56:47 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/28 15:27:10 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,17 @@ int	main(int argc, char **argv, char **env)
 	consts = NULL;
 	tok = NULL;
 	if (argc != 1 || argv == NULL)
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	consts = ft_make_consts(consts, env);
 	ft_handle_sig();
 	while (1)
 	{
 		consts->input = readline("minishell: ");
+		if (consts->input == NULL)
+		{
+			ft_putstr_fd("exit\n", STDOUT_FILENO);
+			break ;
+		}
 		// if (consts->input == NULL)
 		// 	ft_input_null();
 		if (consts->input)
@@ -34,14 +39,9 @@ int	main(int argc, char **argv, char **env)
 			// ft_input_error(input);
 			// if (!ft_strncmp("minishell", consts->input, 10))
 			// 	ft_new_shell();
-			if (!ft_strncmp("exit", consts->input, 4))
-				ft_exit(consts);
-			else
-			{
-				tok = ft_parse_input(tok, consts);
-				ft_execute(tok, consts);
-				ft_free_tok(tok, consts);
-			}
+			tok = ft_parse_input(tok, consts);
+			ft_execute(tok, consts);
+			ft_free_tok(tok, consts);
 		}
 		if (consts->input != NULL)
 			free(consts->input);
@@ -79,8 +79,8 @@ char	**ft_make_env_path(t_token *tok, t_cnst *consts)
 
 t_cnst	*ft_make_consts(t_cnst *consts, char **env)
 {
-	int		env_vars;
-	int		i;
+	int	env_vars;
+	int	i;
 
 	env_vars = 0;
 	i = 0;
@@ -88,8 +88,8 @@ t_cnst	*ft_make_consts(t_cnst *consts, char **env)
 		env_vars++;
 	consts = (t_cnst *)malloc(sizeof(t_cnst));
 	if (consts == NULL)
-		exit (errno);
-	consts->environ = (char **)malloc((env_vars + 1) * sizeof(char*));
+		exit(errno);
+	consts->environ = (char **)malloc((env_vars + 1) * sizeof(char *));
 	if (consts->environ == NULL)
 		ft_cleanup(NULL, consts, errno);
 	while (i < env_vars)
