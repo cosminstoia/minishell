@@ -3,48 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/27 15:53:39 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/28 20:18:40 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_execute_nonbuiltins(t_token *tok, t_cnst *consts)
+static void	ft_execute_nonbuiltins(t_token *tok, t_cnst *consts, int index)
 {
-	int	*status;
-
-	status = NULL;
-	tok->path = ft_make_path(tok, consts, NULL, 0);
-	tok->pid = fork();
-	if (tok->pid == -1)
+	tok[index].path = ft_make_path(tok, consts, index);
+	tok[index].pid = fork();
+	if (tok[index].pid == -1)
 		ft_cleanup(tok, consts, errno);
-	if (tok->pid == 0)
+	if (tok[index].pid == 0)
 	{
-		execve(tok->path, tok->cmd, consts->environ);
+		ft_redirect(&tok[index]);
+		execve(tok[index].path, tok[index].cmd, consts->environ);
 		exit(0);
 	}
-	waitpid(tok->pid, status, 0);
 }
 
 void	ft_execute(t_token *tok, t_cnst *consts)
 {
-	if (ft_strncmp(tok->cmd[0], "echo", 5) == 0)
-		ft_execute_echo(tok);
-	else if (ft_strncmp(tok->cmd[0], "cd", 3) == 0)
-		ft_execute_cd(tok, consts);
-	else if (ft_strncmp(tok->cmd[0], "pwd", 4) == 0)
-		ft_execute_pwd();
-	else if (ft_strncmp(tok->cmd[0], "env", 4) == 0)
-		ft_execute_env(consts);
-	else if (ft_strncmp(tok->cmd[0], "unset", 6) == 0)
-		ft_execute_unset(tok, consts);
-	else if (ft_strncmp(tok->cmd[0], "export", 7) == 0)
-		ft_execute_export(tok, consts);
-	else if (ft_strncmp(tok->cmd[0], "exit", 5) == 0)
-		ft_execute_exit(tok, consts);
-	else
-		ft_execute_nonbuiltins(tok, consts);
+	int	index;
+
+	index = 0;
+	while (index < consts->tok_num)
+	{
+		if (ft_strncmp(tok[index].cmd[0], "echo", 5) == 0)
+			ft_execute_echo(tok);
+		else if (ft_strncmp(tok[index].cmd[0], "cd", 3) == 0)
+			ft_execute_cd(tok, consts);
+		else if (ft_strncmp(tok[index].cmd[0], "pwd", 4) == 0)
+			ft_execute_pwd();
+		else if (ft_strncmp(tok[index].cmd[0], "env", 4) == 0)
+			ft_execute_env(consts);
+		else if (ft_strncmp(tok[index].cmd[0], "unset", 6) == 0)
+			ft_execute_unset(tok, consts);
+		else if (ft_strncmp(tok[index].cmd[0], "export", 7) == 0)
+			ft_execute_export(tok, consts);
+		else
+			ft_execute_nonbuiltins(tok, consts, index);
+		index++;
+	}
+	ft_wait(tok, consts);
+}
+
+void	ft_wait(t_token *tok, t_cnst *consts)
+{
+	int	status;
+	int	index;
+
+	index = 0;
+	while (index < consts->tok_num)
+	{
+		waitpid(tok[index].pid, &status, 0);
+		if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+			perror("waitpid error");
+		index++;
+	}
 }

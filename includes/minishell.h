@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/27 15:48:57 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/28 20:13:29 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void		ft_redirect(t_token *tok);
 
 /* execute.c: function to handle the execution */
 void		ft_execute(t_token *tok, t_cnst *consts);
+void		ft_wait(t_token *tok, t_cnst *consts);
 
 /* builtins.c: functions to handle the builtin functions */
 void		ft_execute_echo(t_token *tok);
@@ -105,7 +106,8 @@ int			ft_strcpy_ms(char *cmd, char **path);
 char		*ft_path_name(char *path, char *command, char *str, char c);
 int			ft_pathlen(char *env_path, char *command, int pathlen);
 char		*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index);
-void		ft_print_err(t_token *tok, t_cnst *consts, char *tok_str, char *path);
-char		*ft_make_path(t_token *tok, t_cnst *consts, char *tok_str, int index);
+void		ft_print_err(t_token *tok, t_cnst *consts, char *path);
+char		*ft_make_path(t_token *tok, t_cnst *consts, int index);
+char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
 
 #endif

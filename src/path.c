@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/27 15:13:18 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/06/28 20:06:14 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ int	ft_pathlen(char *env_path, char *command, int pathlen)
 char	*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index)
 {
 	int	pathlen;
-
+	if (consts->env_p == NULL)
+		return (tok[index].path);
 	while (consts->env_p[*sub_index] != NULL)
 	{
 		pathlen = 0;
@@ -106,7 +107,7 @@ char	*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index)
 
 // function to print an error message if all potential path locations have been
 // tested and none resulted in an executable file
-void	ft_print_err(t_token *tok, t_cnst *consts, char *tok_str, char *path)
+void	ft_print_err(t_token *tok, t_cnst *consts, char *path)
 {
 	char	*error;
 	int		pathlen;
@@ -115,11 +116,7 @@ void	ft_print_err(t_token *tok, t_cnst *consts, char *tok_str, char *path)
 	pathlen = ft_pathlen("command not found:", path, pathlen);
 	error = (char *)malloc(pathlen * sizeof(char));
 	if (error == NULL)
-	{
-		if (tok_str != NULL)
-			free(tok_str);
 		ft_cleanup(tok, consts, errno);
-	}
 	error = ft_path_name("command not found:", path, error, ' ');
 	ft_putstr_fd(error, 1);
 	ft_putstr_fd("\n", 1);
@@ -127,31 +124,34 @@ void	ft_print_err(t_token *tok, t_cnst *consts, char *tok_str, char *path)
 }
 
 // function to create a path to be used by execve to execute the command
-char	*ft_make_path(t_token *tok, t_cnst *consts, char *tok_str, int index)
+char	*ft_make_path(t_token *tok, t_cnst *consts, int index)
 {
 	int	sub_index;
-	int	error;
 
 	sub_index = 0;
 	tok[index].path = ft_path_access(tok, consts, &sub_index, index);
 	if (sub_index == -1)
-	{
-		if (tok_str != NULL)
-			free(tok_str);
 		ft_cleanup(tok, consts, errno);
-	}
-	if (consts->env_p[sub_index] == NULL)
+	if (tok[index].path == NULL)
+		tok[index].path = ft_path_is_cmd(tok, consts, index);
+	else if (consts->env_p[sub_index] == NULL)
 	{
 		free(tok[index].path);
-		error = ft_strcpy_ms(tok[index].cmd[0], &tok[index].path);
-		if (error == -1)
-		{
-			if (tok_str != NULL)
-				free(tok_str);
-			ft_cleanup(tok, consts, errno);
-		}
-		if (access(tok[index].cmd[0], X_OK) == -1)
-			ft_print_err(tok, consts, tok_str, tok[index].path);
+		tok[index].path = ft_path_is_cmd(tok, consts, index);
 	}
+	return (tok[index].path);
+}
+
+char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
+{
+	int	error;
+
+	error = ft_strcpy_ms(tok[index].cmd[0], &tok[index].path);
+	if (error == -1)
+	{
+		ft_cleanup(tok, consts, errno);
+	}
+	if (access(tok[index].cmd[0], X_OK) == -1)
+		ft_print_err(tok, consts, tok[index].path);
 	return (tok[index].path);
 }
