@@ -27,7 +27,8 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/path.c \
 				$(SRC_DIR)/execute.c \
 				$(SRC_DIR)/builtins.c \
-				$(SRC_DIR)/export.c
+				$(SRC_DIR)/export.c \
+				$(SRC_DIR)/builtins_exec.c 
 
 # Objects
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

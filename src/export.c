@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/06/27 15:48:57 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/01 12:11:10 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 void	ft_execute_exit(t_token *tok, t_cnst *consts)
 {
 	int	exit_no;
-
 	exit_no = 0;
 	exit_no = ft_atoi(&consts->input[4]);
 	ft_cleanup(tok, consts, exit_no);
