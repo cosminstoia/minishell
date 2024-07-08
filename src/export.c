@@ -6,28 +6,41 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/08 18:04:25 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/08 18:38:32 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 // Function to check if there is provided an argument
-static void	ft_check_argument(t_token *tok, t_cnst *consts)
+static int	ft_check_argument(t_token *tok, t_cnst *consts)
 {
-	int	i;
+	int		i;
+	char	*equal_sign;
 
 	if (tok->cmd[1] == NULL)
 	{
 		i = 0;
 		while (consts->environ[i] != NULL)
 		{
-			ft_putstr_fd(consts->environ[i], STDOUT_FILENO);
-			write(1, "\n", 1);
+			equal_sign = ft_strchr(consts->environ[i], '=');
+			if (equal_sign)
+			{
+				ft_putstr_fd("declare -x ", STDOUT_FILENO);
+				ft_putstr_fd(consts->environ[i], STDOUT_FILENO);
+			}
+			else
+			{
+				ft_putstr_fd("declare -x ", STDOUT_FILENO);
+				ft_putstr_fd(consts->environ[i], STDOUT_FILENO);
+				ft_putstr_fd("=\"\"", STDOUT_FILENO);
+			}
+			ft_putstr_fd("\n", STDOUT_FILENO);
 			i++;
 		}
-		return ;
+		return (0);
 	}
+	return (1);
 }
 
 // Function to check if the variable already exists
@@ -96,6 +109,7 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 void	ft_execute_exit(t_token *tok, t_cnst *consts)
 {
 	int	exit_no;
+
 	exit_no = 0;
 	exit_no = ft_atoi(&consts->input[4]);
 	ft_cleanup(tok, consts, exit_no);
