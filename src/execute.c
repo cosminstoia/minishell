@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/01 12:11:16 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/08 18:03:17 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,45 +33,35 @@ Redirect output if not the last command
 Redirect any additional file descriptors as needed
 Check if the command is a built-in function
 Execute external command using execve */
-void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int input_fd,
-		int pipefd[2])
+void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2])
 {
 	if (index > 0)
 	{
-		dup2(input_fd, 0);
-		close(input_fd);
+		dup2(tok[index].input_fd, 0);
+		close(tok[index].input_fd);
 	}
 	if (index < consts->tok_num - 1)
 	{
 		close(pipefd[0]);
-		dup2(pipefd[1], 1);
+		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 	}
 	ft_redirect(&tok[index]);
-	if (ft_is_builtin(tok[index].cmd[0]))
-	{
-		ft_execute_builtins(tok, consts, index);
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		execve(tok[index].path, tok[index].cmd, consts->environ);
-		perror("execve error");
-		exit(EXIT_FAILURE);
-	}
+	tok[index].path = ft_make_path(tok, consts, index);
+	execve(tok[index].path, tok[index].cmd, consts->environ);
 }
 
 /* Close input_fd if not the first command
 Close pipefd[1] and update input_fd if not the last command */
-void	ft_execute_parent(int index, int input_fd, int pipefd[2],
+void	ft_execute_parent(t_token *tok, int index, int pipefd[2],
 		t_cnst *consts)
 {
 	if (index > 0)
-		close(input_fd);
+		close(tok[index].input_fd);
 	if (index < consts->tok_num - 1)
 	{
 		close(pipefd[1]);
-		input_fd = pipefd[0];
+		tok[index + 1].input_fd = pipefd[0];
 	}
 }
 
@@ -83,15 +73,14 @@ Execute parent function
 Wait for all child processes to complete */
 void	ft_execute(t_token *tok, t_cnst *consts)
 {
-	int	index;
 	int	pipefd[2];
-	int	input_fd;
+	int	index;
+	int	saved_stdin;
+	int	saved_stdout;
 
-	input_fd = 0;
 	index = 0;
 	while (index < consts->tok_num)
 	{
-		tok[index].path = ft_make_path(tok, consts, index);
 		if (index < consts->tok_num - 1)
 		{
 			if (pipe(pipefd) == -1)
@@ -100,17 +89,30 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 				exit(EXIT_FAILURE);
 			}
 		}
-		tok[index].pid = fork();
-		if (tok[index].pid == -1)
+		if (ft_is_builtin(tok[index].cmd[0]))
 		{
-			perror("fork error");
-			ft_cleanup(tok, consts, errno);
-			exit(EXIT_FAILURE);
+			saved_stdin = dup(STDIN_FILENO);
+			saved_stdout = dup(STDOUT_FILENO);
+			ft_redirect(&tok[index]);
+			ft_execute_builtins(tok, consts, index);
+			dup2(saved_stdin, STDIN_FILENO);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdin);
+			close(saved_stdout);
+			return ;
 		}
-		if (tok[index].pid == 0)
-			ft_execute_child(tok, consts, index, input_fd, pipefd);
 		else
-			ft_execute_parent(index, input_fd, pipefd, consts);
+		{
+			tok[index].pid = fork();
+			if (tok[index].pid == 0)
+			{
+				ft_execute_child(tok, consts, index, pipefd);
+				exit(EXIT_SUCCESS);
+			}
+			else
+				ft_execute_parent(tok, index, pipefd, consts);
+		}
+		tok[index].input_fd = pipefd[1];
 		index++;
 	}
 	ft_wait(tok, consts);
