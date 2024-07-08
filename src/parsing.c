@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:27:39 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/26 19:25:17 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/01 14:04:54 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ t_token	*ft_init_tok(t_token *tok, int index)
 	tok[index].out = NULL;
 	tok[index].out_a = NULL;
 	tok[index].heredoc = NULL;
+	tok[index].input_fd = 0;
 	return (tok);
 }
 

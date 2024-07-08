@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/01 12:02:05 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/08 17:16:38 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_token
 	char						*out;
 	char						*out_a;
 	char						*heredoc;
+	int							input_fd;
 	pid_t						pid;
 }								t_token;
 
