@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/08 18:26:40 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/08 18:36:07 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,16 @@ static int	ft_check_argument(t_token *tok, t_cnst *consts)
 			equal_sign = ft_strchr(consts->environ[i], '=');
 			if (equal_sign)
 			{
-				write(STDOUT_FILENO, "declare -x ", 11);
-				write(STDOUT_FILENO, consts->environ[i],
-					ft_strlen(consts->environ[i]));
+				ft_putstr_fd("declare -x ", STDOUT_FILENO);
+				ft_putstr_fd(consts->environ[i], STDOUT_FILENO);
 			}
 			else
 			{
-				write(STDOUT_FILENO, "declare -x ", 11);
-				write(STDOUT_FILENO, consts->environ[i],
-					ft_strlen(consts->environ[i]));
-				write(STDOUT_FILENO, "=\"\"", 3);
+				ft_putstr_fd("declare -x ", STDOUT_FILENO);
+				ft_putstr_fd(consts->environ[i], STDOUT_FILENO);
+				ft_putstr_fd("=\"\"", STDOUT_FILENO);
 			}
-			write(STDOUT_FILENO, "\n", 1);
+			ft_putstr_fd("\n", STDOUT_FILENO);
 			i++;
 		}
 		return (0);
