@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/08 17:16:38 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/08 20:55:48 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ typedef struct s_cnst
 /* Functions prototypes */
 
 /* minishell.c : */
+int			ft_input_error(char *input);
+int			ft_quotes_close(char *input);
 t_cnst		*ft_make_consts(t_cnst *consts, char **env);
 char		*ft_return_env_var(t_cnst *consts, char *find_str);
 char		**ft_make_env_path(t_token *tok, t_cnst *consts);
@@ -90,8 +92,10 @@ void		ft_exit(t_cnst *consts);
 t_token		*ft_parse_input(t_token *tok, t_cnst *consts);
 int			ft_token_num(char *input, int tok_num);
 t_token		*ft_init_tok(t_token *tok, int index);
-int			ft_cpy_tok_str(char *input, char *tok_str, int i);
+int			ft_cpy_tok_str(char *input, char *tok_str, int i, int len);
 t_token		*ft_make_toks(t_token *tok, t_cnst *consts, char *tok_str, int tok_no);
+int			ft_strlen_tokstr(char *input, int len, int i);
+int			ft_check_quotes(char *input, int i);
 
 /* split.c: functions to split env PATH and commands into an array of strings*/
 char		**ft_split_ms(char *str, char c);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:27:39 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/01 14:04:54 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/08 20:54:19 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,19 @@ t_token	*ft_parse_input(t_token *tok, t_cnst *consts)
 	return (tok);
 }
 
+int	ft_check_quotes(char *input, int i)
+{
+	char	quote_symb;
+
+	quote_symb = input[i];
+	i++;
+	while (input[i] != '\0' && input[i] != quote_symb)
+		i++;
+	if (input[i] == quote_symb)
+		i++;
+	return (i);
+}
+
 // function that uses the input string to find the number of tokens required
 int	ft_token_num(char *input, int tok_num)
 {
@@ -40,21 +53,15 @@ int	ft_token_num(char *input, int tok_num)
 		tok_num++;
 	while (input[i] != '\0')
 	{
-		if (input[i] == '\'')
+		if (input[i] == '\'' || input[i] == '"')
 		{
-			i++;
-			while (input[i] != '\0' && input[i] != '\'')
-				i++;
-		}
-		else if (input[i] == '"')
-		{
-			i++;
-			while (input[i] != '\0' && input[i] != '"')
-				i++;
+			i = ft_check_quotes(input, i);
+			i--;
 		}
 		else if (input[i] == '|' && input[i + 1] != '|')
 			tok_num++;
-		i++;
+		if (input[i] != '\0')
+			i++;
 	}
 	return (tok_num);
 }
@@ -73,21 +80,49 @@ t_token	*ft_init_tok(t_token *tok, int index)
 }
 
 // function to copy the string from input until the next pipe
-int	ft_cpy_tok_str(char *input, char *tok_str, int i)
+int	ft_cpy_tok_str(char *input, char *tok_str, int i, int len)
 {
-	int	j;
+	int		j;
 
 	j = 0;
-	while (input[i] != '\0' && input[i] != '|')
+	while (j < len - 1)
 	{
-		tok_str[j] = input[i];
-		i++;
-		j++;
+		if (input[i] == '\\' || input[i] == ';')
+			i++;
+		else
+		{
+			tok_str[j] = input[i];
+			i++;
+			j++;
+		}
 	}
 	tok_str[j] = '\0';
-	if (input[i] == '|')
-		i++;
 	return (i);
+}
+
+int	ft_strlen_tokstr(char *input, int len, int i)
+{
+	while (input[len + i] != '\0' && input[len + i] != '|')
+	{
+		if (input[len + i] == '\'')
+		{
+			len++;
+			while (input[len + i] != '\'')
+				len++;
+		}
+		else if (input[len + i] == '"')
+		{
+			len++;
+			while (input[len + i] != '"')
+				len++;
+		}
+		else if (input[len + i] == '\\' || input[len + i] == ';')
+			i++;
+		if (input[len + i] != '\0')
+			len++;
+	}
+	len++;
+	return (len);
 }
 
 // function to make all structs of tokens in the tok_array
@@ -102,18 +137,18 @@ t_token	*ft_make_toks(t_token *tok, t_cnst *consts, char *tok_str, int tok_num)
 	while (index < tok_num)
 	{
 		len = 0;
-		if (tok_str != NULL)
-			free(tok_str);
-		while (consts->input[len + i] != '\0' && consts->input[len + i] != '|')
-			len++;
-		tok_str = (char *)malloc((len + 1) * sizeof(char));
+		len = ft_strlen_tokstr(consts->input, len, i);
+		tok_str = (char *)malloc((len) * sizeof(char));
 		if (tok_str == NULL)
 			ft_cleanup(tok, consts, errno);
-		i = ft_cpy_tok_str(consts->input, tok_str, i);
+		i = ft_cpy_tok_str(consts->input, tok_str, i, len);
+		if (consts->input[i] == '|')
+			i++;
 		tok = ft_init_tok(tok, index);
 		tok = ft_fill_tok(tok, consts, tok_str, index);
 		index++;
+		if (tok_str != NULL)
+			free(tok_str);
 	}
-	free(tok_str);
 	return (tok);
 }
