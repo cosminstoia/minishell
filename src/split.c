@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:18:47 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/25 19:03:30 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/08 20:54:08 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,19 @@ int	ft_skip_redir(char *str, int i)
 	return(i);
 }
 
+// int	ft_check_quotes2(char *input, int i)//combine this with check_quotes in parsing.c
+// {
+// 	char	quote_symb;
+
+// 	quote_symb = input[i];
+// 	i++;
+// 	while (input[i] != '\0' && input[i] != quote_symb)
+// 		i++;
+// 	if (input[i] == quote_symb)
+// 		i++;
+// 	return (i);
+// }
+
 // function to count the number of strings that should be included in the array
 int	ft_strnum_ms(char *str, char c, int strnum)
 {
@@ -101,8 +114,11 @@ int	ft_strnum_ms(char *str, char c, int strnum)
 			i = ft_skip_redir(str, i);
 		else if (str[i] == '\'' || str[i] == '"')
 		{
-			strnum++;
-			i = ft_skip_quotes(str, i);
+			if (i == 0 || str[i - 1] == c)
+				strnum++;
+			i = ft_check_quotes(str, i);
+			while (str[i] != '\0' && str[i] != c && str[i] != '>' && str[i] != '<' && str[i] != '\'' && str[i] != '"')
+				i++;
 		}
 		else if (str[i] != c)
 		{
@@ -110,31 +126,32 @@ int	ft_strnum_ms(char *str, char c, int strnum)
 			while (str[i] != '\0' && str[i] != c && str[i] != '>' && str[i] != '<' && str[i] != '\'' && str[i] != '"')
 				i++;
 		}
-		if (str[i] != '\0')
+		else if (str[i] != '\0')
 			i++;
 	}
 	return (strnum);
 }
 
 // function to calculate how long the string should be
-int	ft_strlen_ms(char *str, char c, int strlen)
+int	ft_strlen_ms(char *str, char c, int len)
 {
-	if (str[strlen] == '\'')
+	char	quote_symb;
+	int 	i;
+
+	i = 0;
+
+	while (str[len] != '\0' && str[len] != c && str[len] != '|' )
 	{
-		while (str[strlen + 1] != '\'' && str[strlen + 1] != '\0')
-			strlen++;
+		if (str[len] == '\'' || str[len] == '"')
+		{
+			quote_symb = str[len];
+			len++;
+			while (str[len] != '\0' && str[len] != quote_symb)
+				len++;
+		}
+		len++;
 	}
-	else if (str[strlen] == '"')
-	{
-		while (str[strlen + 1] != '"' && str[strlen + 1] != '\0')
-			strlen++;
-	}
-	else
-	{
-		while (str[strlen] != c && str[strlen] != '\0')
-			strlen++;
-	}
-	return (strlen);
+	return (len);
 }
 
 // function to copy a new string from the input string and return the index of
@@ -149,14 +166,12 @@ int	ft_copystr_ms(char **strstr, char *str, char c, int index)
 	strlen = 0;
 	i = 0;
 	j = 0;
-	if (str[i] == '$')
-		return (ft_env_var(strstr, str, c, index));
+	// if (str[i] == '$')
+	// 	return (ft_env_var(strstr, str, c, index));
 	strlen = ft_strlen_ms(str, c, strlen);
 	strstr[index] = (char *)malloc((strlen + 1) * sizeof(char));
 	if (strstr[index] == NULL)
 		return (errno);
-	if (str[i] == '\'' || str[i] == '"')
-		j++;
 	while (i < strlen)
 	{
 		strstr[index][i] = str[j];
@@ -164,8 +179,6 @@ int	ft_copystr_ms(char **strstr, char *str, char c, int index)
 		j++;
 	}
 	strstr[index][i] = '\0';
-	if (j > i)
-		j++;
 	return (j);
 }
 

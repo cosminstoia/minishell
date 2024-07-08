@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/08 14:08:17 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/08 19:52:03 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,54 @@ int	main(int argc, char **argv, char **env)
 		if (consts->input)
 		{
 			add_history(consts->input);
-			// ft_input_error(input);
-			// if (!ft_strncmp("minishell", consts->input, 10))
-			// 	ft_new_shell();
-			tok = ft_parse_input(tok, consts);
-			ft_execute(tok, consts);
-			ft_free_tok(tok, consts);
+			if (!ft_input_error(consts->input))
+			{		
+				// if (!ft_strncmp("minishell", consts->input, 10))
+				// 	ft_new_shell();
+				tok = ft_parse_input(tok, consts);
+				ft_execute(tok, consts);
+				ft_free_tok(tok, consts);
+			}
 		}
 		if (consts->input != NULL)
 			free(consts->input);
 	}
+}
+
+int	ft_input_error(char *input)
+{
+	if (!ft_quotes_close(input))
+	{
+		printf("Error: quotes must be closed\n");
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_quotes_close(char *input)
+{
+	char	quote_symb;
+	int		i;
+
+	i = 0;
+	while (input[i] != '\0')
+	{
+		if (input[i] == '\'' || input[i] == '"')
+		{
+			quote_symb = input[i];
+			i++;
+			while (input[i] != '\0')
+			{
+				if (input[i] == quote_symb)
+					break;
+				i++;
+			}
+			if (input[i] == '\0')
+				return (0);
+		}
+		i++;
+	}
+	return (1);
 }
 
 char	*ft_return_env_var(t_cnst *consts, char *find_str)
