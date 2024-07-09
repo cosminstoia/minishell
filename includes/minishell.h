@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/08 20:55:48 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:34:31 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void		ft_redirect(t_token *tok);
 /* execute.c: function to handle the execution */
 void		ft_execute(t_token *tok, t_cnst *consts);
 void		ft_wait(t_token *tok, t_cnst *consts);
+char 		**ft_remove_quotes(char **cmd);
 
 /* builtins_exec.c: functions to execute the builtin functions */
 void		ft_execute_builtins(t_token *tok, t_cnst *consts, int index);
