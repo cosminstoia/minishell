@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:18:47 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/08 20:54:08 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:53:35 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,19 +86,6 @@ int	ft_skip_redir(char *str, int i)
 	}
 	return(i);
 }
-
-// int	ft_check_quotes2(char *input, int i)//combine this with check_quotes in parsing.c
-// {
-// 	char	quote_symb;
-
-// 	quote_symb = input[i];
-// 	i++;
-// 	while (input[i] != '\0' && input[i] != quote_symb)
-// 		i++;
-// 	if (input[i] == quote_symb)
-// 		i++;
-// 	return (i);
-// }
 
 // function to count the number of strings that should be included in the array
 int	ft_strnum_ms(char *str, char c, int strnum)
