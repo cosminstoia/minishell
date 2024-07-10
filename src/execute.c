@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/09 11:50:27 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:02:29 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,46 +28,6 @@ void	ft_wait(t_token *tok, t_cnst *consts)
 	}
 }
 
-/* Remove quotes from the command before execution*/
-char **ft_remove_quotes(char **cmd)
-{
-	char	quote_symb;
-	int		index;
-	int		i;
-	int		j;
-
-	index = 0;
-	while (cmd[index])
-	{
-		i = 0;
-		j = 0;
-		while (cmd[index][i] != '\0')
-		{
-			if (cmd[index][i] == '"' || cmd[index][i] == '\'')
-			{
-				quote_symb = cmd[index][i];
-				i++;
-				while (cmd[index][i] != quote_symb)
-				{
-					cmd[index][j] = cmd[index][i];
-					i++;
-					j++;
-				}
-				i++;
-			}
-			else
-			{
-				cmd[index][j] = cmd[index][i];
-				i++;
-				j++;
-			}
-		}
-		cmd[index][j] = '\0';
-		index++;
-	}
-	return (cmd);
-}
-
 /* Redirect input if not the first command
 Redirect output if not the last command
 Redirect any additional file descriptors as needed
@@ -75,7 +35,9 @@ Check if the command is a built-in function
 Execute external command using execve */
 void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2])
 {
+	tok->cmd = ft_expand_dollar(tok, consts, &tok[index]);
 	tok->cmd = ft_remove_quotes(tok[index].cmd);
+	// printf("A REMOVE QUOTES tok[index].cmd[0] =>%s<, cmd[1]=>%s<, cmd[2]=>%s<\n\n", tok[index].cmd[0], tok[index].cmd[1], tok[index].cmd[2]);
 	if (index > 0)
 	{
 		dup2(tok[index].input_fd, 0);
