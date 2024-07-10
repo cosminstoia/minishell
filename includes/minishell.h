@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/09 11:34:31 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/10 17:47:21 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_cnst
 /* minishell.c : */
 int			ft_input_error(char *input);
 int			ft_quotes_close(char *input);
+char		ft_redir_error(char *input, char err_char);
 t_cnst		*ft_make_consts(t_cnst *consts, char **env);
 char		*ft_return_env_var(t_cnst *consts, char *find_str);
 char		**ft_make_env_path(t_token *tok, t_cnst *consts);
@@ -119,5 +120,12 @@ char		*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index);
 void		ft_print_err(t_token *tok, t_cnst *consts, char *path);
 char		*ft_make_path(t_token *tok, t_cnst *consts, int index);
 char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
+
+/* final_cmd.c functions to finalise the cmd strings before execution */
+int			ft_strlen_cmd(t_cnst *consts, char *cmd_str, int strlen, int dol_num);
+int			ft_cpyvar(t_cnst *consts, char *cmd_str, char *cmd_new);
+char		*ft_remake_cmd(t_token *tok, t_cnst *consts, char *cmd_str, int dol_num);
+char		**ft_expand_dollar(t_token *tok, t_cnst *consts, t_token *tok_current);
+char 		**ft_remove_quotes(char **cmd);
 
 #endif

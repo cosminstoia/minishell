@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:18:47 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/09 11:53:35 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:52:28 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,6 @@ int	ft_copystr_ms(char **strstr, char *str, char c, int index)
 	strlen = 0;
 	i = 0;
 	j = 0;
-	// if (str[i] == '$')
-	// 	return (ft_env_var(strstr, str, c, index));
 	strlen = ft_strlen_ms(str, c, strlen);
 	strstr[index] = (char *)malloc((strlen + 1) * sizeof(char));
 	if (strstr[index] == NULL)
@@ -167,31 +165,4 @@ int	ft_copystr_ms(char **strstr, char *str, char c, int index)
 	}
 	strstr[index][i] = '\0';
 	return (j);
-}
-
-// function to create a string of an environment variable whenever a $
-// symbol is found in the input string
-int	ft_env_var(char **strstr, char *str, char c, int index)
-{
-	char	*temp_str;
-	int		strlen;
-	int		i;
-
-	strlen = 0;
-	i = 0;
-	while (str[strlen] != '\0' && str[strlen] != c)
-		strlen++;
-	strlen++;
-	temp_str = (char *)malloc(strlen * sizeof(char));
-	if (temp_str == NULL)
-		return (-1);
-	while (i < strlen - 1)
-	{
-		temp_str[i] = str[i + 1]; 
-		i++;
-	}
-	temp_str[i] = '\0';
-	strstr[index] = ft_strdup(getenv(temp_str));
-	free(temp_str);
-	return (strlen);
 }
