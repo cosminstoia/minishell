@@ -6,6 +6,7 @@ CC          = cc
 
 # Compiling flags
 CFLAGS      = -Wall -Werror -Wextra
+# CFLAGS      = -Wall -Werror -Wextra -g -fsanitize=address
 
 # Includes
 INCLUDES    = includes/minishell.h
@@ -28,7 +29,8 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/execute.c \
 				$(SRC_DIR)/builtins.c \
 				$(SRC_DIR)/export.c \
-				$(SRC_DIR)/builtins_exec.c 
+				$(SRC_DIR)/builtins_exec.c \
+				$(SRC_DIR)/final_cmd.c 
 
 # Objects
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

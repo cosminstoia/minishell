@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/08 18:03:17 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/10 18:02:29 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ Check if the command is a built-in function
 Execute external command using execve */
 void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2])
 {
+	tok->cmd = ft_expand_dollar(tok, consts, &tok[index]);
+	tok->cmd = ft_remove_quotes(tok[index].cmd);
+	// printf("A REMOVE QUOTES tok[index].cmd[0] =>%s<, cmd[1]=>%s<, cmd[2]=>%s<\n\n", tok[index].cmd[0], tok[index].cmd[1], tok[index].cmd[2]);
 	if (index > 0)
 	{
 		dup2(tok[index].input_fd, 0);
