@@ -6,34 +6,34 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/08 17:31:32 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/12 01:35:51 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 // Function to execute the "echo" and "echo -n" command
-void	ft_execute_echo(t_token *tok)
+void	ft_execute_echo(t_token *tok, int output_fd)
 {
 	int	i;
 	int	newline;
 
 	i = 1;
 	newline = 1;
-	if (tok->cmd[i] && ft_strncmp(tok->cmd[i], "-n", 3) == 0)
+	if (tok->cmd[i] && strncmp(tok->cmd[i], "-n", 3) == 0)
 	{
 		newline = 0;
 		i++;
 	}
 	while (tok->cmd[i])
 	{
-		ft_putstr_fd(tok->cmd[i], STDOUT_FILENO);
+		ft_putstr_fd(tok->cmd[i], output_fd);
 		if (tok->cmd[i + 1])
-			write(1, " ", 1);
+			write(output_fd, " ", 1);
 		i++;
 	}
 	if (newline)
-		write(1, "\n", 1);
+		write(output_fd, "\n", 1);
 }
 
 // Function to execute the "cd" command in the parent process
@@ -68,28 +68,29 @@ void	ft_execute_cd(t_token *tok, t_cnst *consts)
 }
 
 // Function to execute the "pwd" command
-void	ft_execute_pwd(void)
+void	ft_execute_pwd(int output_fd)
 {
 	char	cwd[PATH_MAX];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
-		ft_putstr_fd(cwd, STDOUT_FILENO);
-		write(1, "\n", 1);
+		ft_putstr_fd(cwd, output_fd);
+		write(output_fd, "\n", 1);
 	}
 	else
 		perror("getcwd() error");
 }
 
 // Function to execute the "env" command
-void	ft_execute_env(t_cnst *consts)
+void	ft_execute_env(t_cnst *consts, int output_fd)
 {
 	char	**env;
 
 	env = consts->environ;
 	while (*env)
 	{
-		printf("%s\n", *env);
+		ft_putstr_fd(*env, output_fd);
+		write(output_fd, "\n", 1);
 		env++;
 	}
 }

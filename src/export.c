@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/08 18:38:32 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/11 12:16:50 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 	size_t	var_len;
 	size_t	value_len;
 
-	ft_check_argument(tok, consts);
+	if (!ft_check_argument(tok, consts))
+		return ;
 	equal_sign = ft_strchr(tok->cmd[1], '=');
 	if (equal_sign == NULL)
 		return ;
