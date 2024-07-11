@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/10 17:47:21 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/12 01:35:26 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_token
 	char						*out_a;
 	char						*heredoc;
 	int							input_fd;
+	int							exit_code;
 	pid_t						pid;
 }								t_token;
 
@@ -71,14 +72,14 @@ void		ft_wait(t_token *tok, t_cnst *consts);
 char 		**ft_remove_quotes(char **cmd);
 
 /* builtins_exec.c: functions to execute the builtin functions */
-void		ft_execute_builtins(t_token *tok, t_cnst *consts, int index);
+void		ft_execute_builtins(t_token *tok, t_cnst *consts, int index, int output_fd);
 int			ft_is_builtin(char *cmd);
 
 /* builtins.c: functions to handle the builtin functions */
-void		ft_execute_echo(t_token *tok);
+void 		ft_execute_echo(t_token *tok, int output_fd);
 void		ft_execute_cd(t_token *tok, t_cnst *consts);
-void		ft_execute_pwd(void);
-void		ft_execute_env(t_cnst *consts);
+void 		ft_execute_pwd(int output_fd);
+void 		ft_execute_env(t_cnst *consts, int output_fd);
 void		ft_execute_unset(t_token *tok, t_cnst *consts);
 void		ft_execute_export(t_token *tok, t_cnst *consts);
 void		ft_execute_exit(t_token *tok, t_cnst *consts);
