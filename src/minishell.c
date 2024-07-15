@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/10 17:47:47 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/15 19:18:55 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,11 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		consts->input = readline("minishell: ");
-		if (consts->input == NULL)
-		{
-			ft_putstr_fd("exit\n", STDOUT_FILENO);
-			break ;
-		}
 		if (consts->input)
 		{
 			add_history(consts->input);
 			if (!ft_input_error(consts->input))
-			{		
+			{
 				// if (!ft_strncmp("minishell", consts->input, 10))
 				// 	ft_new_shell();
 				tok = ft_parse_input(tok, consts);
@@ -43,8 +38,12 @@ int	main(int argc, char **argv, char **env)
 				ft_free_tok(tok, consts);
 			}
 		}
-		if (consts->input != NULL)
-			free(consts->input);
+		else if (!consts->input)
+		{
+			ft_putstr_fd("exit\n", STDOUT_FILENO);
+			break ;
+		}
+		free(consts->input);
 	}
 }
 
@@ -84,7 +83,7 @@ int	ft_quotes_close(char *input)
 			while (input[i] != '\0')
 			{
 				if (input[i] == quote_symb)
-					break;
+					break ;
 				i++;
 			}
 			if (input[i] == '\0')
@@ -98,7 +97,7 @@ int	ft_quotes_close(char *input)
 /* function to check if there are any syntax errors in the redirects */
 char	ft_redir_error(char *input, char err_char)
 {
-	int 	i;
+	int	i;
 
 	i = 0;
 	while (input[i] != '\0')
@@ -107,24 +106,26 @@ char	ft_redir_error(char *input, char err_char)
 		{
 			if (input[i + 1] == '>')
 				err_char = '>';
-			else if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i + 2] == '>'))
+			else if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i
+					+ 2] == '>'))
 				err_char = input[i + 2];
 		}
 		if (input[i] == '>')
 		{
 			if (input[i + 1] == '<')
 				err_char = '<';
-			else if (input[i + 1] == '>' && (input[i + 2] == '<' || input[i + 2] == '>'))
+			else if (input[i + 1] == '>' && (input[i + 2] == '<' || input[i
+					+ 2] == '>'))
 				err_char = input[i + 2];
 		}
 		if (err_char != 'x')
-			break;
+			break ;
 		i++;
 	}
 	return (err_char);
 }
 
-/* function that tries to find a string in the environment variable list and if 
+/* function that tries to find a string in the environment variable list and if
 it finds a match, returns a pointer to the variable */
 char	*ft_return_env_var(t_cnst *consts, char *find_str)
 {

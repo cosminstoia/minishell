@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/12 01:41:33 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/15 21:50:23 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,16 @@ void	ft_wait(t_token *tok, t_cnst *consts)
 		waitpid(tok[index].pid, &status, 0);
 		if (WIFEXITED(status))
 			tok->exit_code = WEXITSTATUS(status);
-		else
-			tok->exit_code = 1;
+		else if (WIFSIGNALED(status))
+			tok->exit_code = 128 + WTERMSIG(status);
 		index++;
 	}
 }
 
-/* Redirect input if not the first command
-Redirect output if not the last command
-Redirect any additional file descriptors as needed
-Check if the command is a built-in function
-Execute external command using execve */
 void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2])
 {
 	tok->cmd = ft_expand_dollar(tok, consts, &tok[index]);
 	tok->cmd = ft_remove_quotes(tok[index].cmd);
-	//(void)pipefd;
 	// printf("A REMOVE QUOTES tok[index].cmd[0] =>%s<,
 	// cmd[1]=>%s<,cmd[2]=>%s<\n\n", tok[index].cmd[0],
 	// tok[index].cmd[1],tok[index].cmd[2]);
@@ -73,19 +67,16 @@ void	ft_execute_parent(t_token *tok, int index, int pipefd[2],
 	}
 }
 
-/* Loop through each command token
-Create pipe if not the last command
-Fork processes
-Execute child function
-Execute parent function
-Wait for all child processes to complete */
 void	ft_execute(t_token *tok, t_cnst *consts)
 {
-	int pipefd[2];
-	int index = 0;
-	int output_fd;
+	int	pipefd[2];
+	int	index;
+	int	output_fd;
+	int	saved_stdin;
+	int	saved_stdout;
 
 	output_fd = -1;
+	index = 0;
 	while (index < consts->tok_num)
 	{
 		if (index < consts->tok_num - 1)
@@ -99,25 +90,34 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 		}
 		else
 			output_fd = STDOUT_FILENO;
-
 		if (ft_is_builtin(tok[index].cmd[0]))
 		{
+			saved_stdin = dup(STDIN_FILENO);
+			saved_stdout = dup(STDOUT_FILENO);
 			ft_redirect(&tok[index]);
 			ft_execute_builtins(tok, consts, index, output_fd);
+			dup2(saved_stdin, STDIN_FILENO);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdin);
+			close(saved_stdout);
+			return ;
 		}
 		else
 		{
 			tok[index].pid = fork();
 			if (tok[index].pid == 0)
+			{
 				ft_execute_child(tok, consts, index, pipefd);
+				exit(EXIT_SUCCESS);
+			}
 			else
 				ft_execute_parent(tok, index, pipefd, consts);
 		}
-
 		if (index < consts->tok_num - 1)
 			tok[index + 1].input_fd = pipefd[0];
 		close(pipefd[1]);
 		index++;
 	}
 	ft_wait(tok, consts);
+	// printf("%d\n", tok->exit_code);
 }
