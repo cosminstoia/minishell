@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/12 01:35:26 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/15 21:50:24 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@
 # include <stdlib.h>            //needed for malloc/free functions
 # include <sys/wait.h>          //needed for wait functions
 # include <limits.h>
+# include <termios.h>
 
-extern volatile sig_atomic_t	got_sig;
+int got_sig;
 
 /* struct with all the variables required to execute one command */
 typedef struct s_token
