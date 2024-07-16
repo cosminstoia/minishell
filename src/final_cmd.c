@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:53:09 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/10 17:45:01 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:10:39 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,29 @@ char	*ft_remake_cmd(t_token *tok, t_cnst *consts, char *cmd_str, int dol_num)
 	return(cmd_new);
 }
 
+/* function to convert the int of the exit code number into a string and add it
+ to the existing string of the command */
+char	*ft_make_exit_code(t_cnst *consts, t_token *tok_current, int index, int i)
+{
+	char	*new_cmd;
+	int		strlen;
+	int		temp_exit_code;
+
+	strlen = 0;
+	temp_exit_code = consts->exit_code;//need to add in the rest of the string before and after the $?
+	while (temp_exit_code > 0)
+	{
+		strlen++;
+		temp_exit_code /= 10;
+	}
+	new_cmd = (char *)malloc((i + strlen) * sizeof(char));
+	if (new_cmd == NULL)
+		return (new_cmd);
+	new_cmd = ft_itoa(consts->exit_code);
+	free(tok_current->cmd[index]);
+	return (new_cmd);
+}
+
 /* function to check if any of the command strings have $ symbols and therefore
  need expanding */
 char	**ft_expand_dollar(t_token *tok, t_cnst *consts, t_token *tok_current)
@@ -126,7 +149,18 @@ char	**ft_expand_dollar(t_token *tok, t_cnst *consts, t_token *tok_current)
 			}
 			else if (tok_current->cmd[index][i] == '$')
 			{
-				tok_current->cmd[index] = ft_remake_cmd(tok, consts, tok_current->cmd[index], i);
+				if (tok_current->cmd[index][i + 1] == '?')
+				{
+					printf("BEFORE consts->exit_code = %d\n", tok_current->exit_code);
+					printf("BEFORE tok_current->cmd[index] = %s\n", tok_current->cmd[index]);
+					tok_current->cmd[index] = ft_make_exit_code(consts, tok_current, index, i);
+					if (tok_current->cmd[index] == NULL)
+						ft_cleanup(tok, consts, errno);
+					printf("AFTER consts->exit_code = %d\n", tok_current->exit_code);
+					printf("AFTER tok_current->cmd[index] = %s\n", tok_current->cmd[index]);
+				}
+				else
+					tok_current->cmd[index] = ft_remake_cmd(tok, consts, tok_current->cmd[index], i);
 				while (tok_current->cmd[index][i] != '\0' && tok_current->cmd[index][i] != ' ' && tok_current->cmd[index][i] != '\t' && tok_current->cmd[index][i] != '\'' && tok_current->cmd[index][i] != '"')
 					i++;
 			}
