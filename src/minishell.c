@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/16 18:36:34 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:39:15 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_input_error(t_cnst *consts, char *input)
 	err_char = 'x';
 	if (!ft_quotes_close(input))
 	{
-		printf("Error: quotes must be closed\n");
+		printf("minishell: Error: quotes must be closed\n");
 		consts->exit_code = 258;
 		return (1);
 	}
@@ -98,6 +98,7 @@ int	ft_quotes_close(char *input)
 	return (1);
 }
 
+/* function to check if a filename is given after the redirection symbol */
 char	ft_no_redir_name(char *input, char err_char, int i)
 {
 	while (input[i] == '>' || input[i] == '<')
@@ -121,10 +122,7 @@ char	ft_redir_error(char *input, char err_char)
 	{
 		if (input[i] == '<')
 		{
-			if (input[i + 1] == '>')
-				err_char = '>';
-			else if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i
-					+ 2] == '>'))
+			if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i + 2] == '>'))
 				err_char = input[i + 2];
 			else
 				err_char = ft_no_redir_name(input, err_char, i);
@@ -133,15 +131,20 @@ char	ft_redir_error(char *input, char err_char)
 		{
 			if (input[i + 1] == '<')
 				err_char = '<';
-			else if (input[i + 1] == '>' && (input[i + 2] == '<' || input[i
-					+ 2] == '>'))
+			else if (input[i + 1] == '>' && (input[i + 2] == '<' || input[i + 2] == '>'))
 				err_char = input[i + 2];
 			else
 				err_char = ft_no_redir_name(input, err_char, i);
 		}
 		if (err_char != 'x')
 			break ;
-		i++;
+		if (input[i] != '>' && input[i] != '<')
+			i++;
+		else
+		{
+			while (input[i] == '>' || input[i] == '<')
+				i++;
+		}
 	}
 	return (err_char);
 }
@@ -172,7 +175,7 @@ char	ft_only_pipe(char *input, char err_char)
 			i++;
 		if (input[i] == '\0' && last_pipe > 0)
 			err_char = '|';
-		else if (input[i] == '>' || input[i] == '<')
+		else if (last_pipe > 0 && (input[i] == '>' || input[i] == '<'))
 			err_char = input[i];
 	}
 	return (err_char);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/01 14:04:48 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 17:48:17 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,24 +105,6 @@ char	*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index)
 	return (tok[index].path);
 }
 
-// function to print an error message if all potential path locations have been
-// tested and none resulted in an executable file
-void	ft_print_err(t_token *tok, t_cnst *consts, char *path)
-{
-	char	*error;
-	int		pathlen;
-
-	pathlen = 0;
-	pathlen = ft_pathlen("command not found:", path, pathlen);
-	error = (char *)malloc(pathlen * sizeof(char));
-	if (error == NULL)
-		ft_cleanup(tok, consts, errno);
-	error = ft_path_name("command not found:", path, error, ' ');
-	ft_putstr_fd(error, 1);
-	ft_putstr_fd("\n", 1);
-	free(error);
-}
-
 // function to create a path to be used by execve to execute the command
 char	*ft_make_path(t_token *tok, t_cnst *consts, int index)
 {
@@ -152,6 +134,6 @@ char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 		ft_cleanup(tok, consts, errno);
 	}
 	if (access(tok[index].cmd[0], X_OK) == -1)
-		ft_print_err(tok, consts, tok[index].path);
+		printf("minishell: %s: command not found\n", tok[index].path);
 	return (tok[index].path);
 }

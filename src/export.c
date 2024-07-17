@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/11 12:16:50 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 17:00:50 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,32 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 void	ft_execute_exit(t_token *tok, t_cnst *consts)
 {
 	int	exit_no;
+	int	i;
+	int	num_check;
 
+	i = 4;
 	exit_no = 0;
-	exit_no = ft_atoi(&consts->input[4]);
+	while (consts->input[i] == ' ' || consts->input[i] == '\t')
+		i++;
+	num_check = i;
+	while (consts->input[num_check] != '\0')
+	{
+		if (consts->input[num_check] != '-' && consts->input[num_check] != '+' && !(consts->input[num_check] >= '0' && consts->input[num_check] <= '9'))
+		{
+			printf("exit: %s: numeric argument required\n", &consts->input[i]);
+			exit_no = 255;
+			break ;
+		}
+		num_check++;
+	}
+	if (consts->input[num_check] == '\0')
+	{
+		exit_no = ft_atoi(&consts->input[i]);
+		if (exit_no > 255)
+			exit_no = exit_no % 256;
+		if (exit_no < 0)
+			exit_no = 256 + exit_no;
+	}
 	ft_cleanup(tok, consts, exit_no);
 	exit(exit_no);
 }
