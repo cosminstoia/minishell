@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/15 19:18:55 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/16 18:36:34 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **env)
 		if (consts->input)
 		{
 			add_history(consts->input);
-			if (!ft_input_error(consts->input))
+			if (!ft_input_error(consts, consts->input))
 			{
 				// if (!ft_strncmp("minishell", consts->input, 10))
 				// 	ft_new_shell();
@@ -48,7 +48,7 @@ int	main(int argc, char **argv, char **env)
 }
 
 /* function to check if there are any in the commands entered by the user */
-int	ft_input_error(char *input)
+int	ft_input_error(t_cnst *consts, char *input)
 {
 	char	err_char;
 
@@ -56,12 +56,16 @@ int	ft_input_error(char *input)
 	if (!ft_quotes_close(input))
 	{
 		printf("Error: quotes must be closed\n");
+		consts->exit_code = 258;
 		return (1);
 	}
 	err_char = ft_redir_error(input, err_char);
+	if (err_char == 'x')
+		err_char = ft_only_pipe(input, err_char);
 	if (err_char != 'x')
 	{
-		printf("syntax error near unexpected token '%c'\n", err_char);
+		printf("minishell: syntax error near unexpected token '%c'\n", err_char);
+		consts->exit_code = 258;
 		return (1);
 	}
 	return (0);
@@ -94,6 +98,19 @@ int	ft_quotes_close(char *input)
 	return (1);
 }
 
+char	ft_no_redir_name(char *input, char err_char, int i)
+{
+	while (input[i] == '>' || input[i] == '<')
+		i++;
+	if (input[i] == '\0')
+		return (input[i - 1]);
+	while (input[i] == ' ' || input[i] == '\t')
+		i++;
+	if (input[i] == '\0' || input[i] == '|' || input[i] == '<' || input[i] == '>')
+		err_char = input[i];
+	return (err_char);
+}
+
 /* function to check if there are any syntax errors in the redirects */
 char	ft_redir_error(char *input, char err_char)
 {
@@ -109,18 +126,54 @@ char	ft_redir_error(char *input, char err_char)
 			else if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i
 					+ 2] == '>'))
 				err_char = input[i + 2];
+			else
+				err_char = ft_no_redir_name(input, err_char, i);
 		}
-		if (input[i] == '>')
+		else if (input[i] == '>')
 		{
 			if (input[i + 1] == '<')
 				err_char = '<';
 			else if (input[i + 1] == '>' && (input[i + 2] == '<' || input[i
 					+ 2] == '>'))
 				err_char = input[i + 2];
+			else
+				err_char = ft_no_redir_name(input, err_char, i);
 		}
 		if (err_char != 'x')
 			break ;
 		i++;
+	}
+	return (err_char);
+}
+
+/* function to check if there is no command before or after a pipe symbol */
+char	ft_only_pipe(char *input, char err_char)
+{
+	int last_pipe;
+	int	i;
+
+	last_pipe = 0;
+	i = 0;
+	while (input[i] == ' ' || input[i] == '\t')
+		i++;
+	if (input[i] == '|')
+		err_char = '|';
+	else
+	{
+		while (input[i] != '\0')
+		{
+			if (input[i] == '|')
+				last_pipe = i;
+			i++;
+		}
+		if (input[last_pipe] != '\0')
+			i = last_pipe + 1;
+		while (input[i] == ' ' || input[i] == '\t')
+			i++;
+		if (input[i] == '\0' && last_pipe > 0)
+			err_char = '|';
+		else if (input[i] == '>' || input[i] == '<')
+			err_char = input[i];
 	}
 	return (err_char);
 }
@@ -186,5 +239,6 @@ t_cnst	*ft_make_consts(t_cnst *consts, char **env)
 	consts->env_p = ft_make_env_path(NULL, consts);
 	consts->input = NULL;
 	consts->tok_num = 0;
+	consts->exit_code = 0;//can this be moved to another fucntion? since it should set to 0 default
 	return (consts);
 }
