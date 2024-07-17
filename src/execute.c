@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/17 14:56:41 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 15:25:28 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 		if (index < consts->tok_num - 1)
 			tok[index + 1].input_fd = pipefd[0];
 		close(pipefd[1]);
+		if (tok[index].heredoc)// is this the right place for this to be ???????????????????????????????
+			unlink("heredoc");
 		index++;
 	}
 	ft_wait(tok, consts);
