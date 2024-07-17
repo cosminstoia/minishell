@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/17 13:59:33 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 14:57:18 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // If there is an infile, the function changes the fd of the infile to 0(stdin)
 static void	ft_handle_infile(t_token *tok, int in_fd)
 {
-	in_fd = open(tok->in, O_RDONLY);
+	in_fd = open(tok->in, O_RDONLY, 0644);
 	if (in_fd < 0)
 	{
 		perror("open input file");
@@ -89,5 +89,6 @@ int	ft_redirect(t_token *tok)
 		ft_handle_append(tok, out_fd);
 		return (0);
 	}
-	return (1);
+	else
+		return (1);
 }
