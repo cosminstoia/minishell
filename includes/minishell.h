@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/16 18:09:27 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:59:38 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char		ft_no_redir_name(char *input, char err_char, int i);
 void		ft_handle_sig(void);
 
 /* redirections.c: function to handle the redirections */
-void		ft_redirect(t_token *tok);
+int		ft_redirect(t_token *tok);
 
 /* execute.c: function to handle the execution */
 void		ft_execute(t_token *tok, t_cnst *consts);
