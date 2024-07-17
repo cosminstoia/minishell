@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/17 14:01:55 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 14:56:41 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,12 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 		{
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
-			if (ft_redirect(&tok[index]))
+			if (ft_redirect(&tok[index]) && index < consts->tok_num - 1)
 				ft_execute_builtins(tok, consts, index, pipefd[1]);
 			else
 				ft_execute_builtins(tok, consts, index, STDOUT_FILENO);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
-			close(saved_stdin);
-			close(saved_stdout);
 		}
 		else
 		{
