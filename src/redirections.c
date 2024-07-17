@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/08 17:16:35 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 13:59:33 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	ft_handle_append(t_token *tok, int out_fd)
 	close(out_fd);
 }
 
-void	ft_redirect(t_token *tok)
+int	ft_redirect(t_token *tok)
 {
 	int	in_fd;
 	int	out_fd;
@@ -75,10 +75,19 @@ void	ft_redirect(t_token *tok)
 	in_fd = -1;
 	out_fd = -1;
 	if (tok->in)
+	{
 		ft_handle_infile(tok, in_fd);
+		return (0);
+	}
 	if (tok->out)
+	{
 		ft_handle_outfile(tok, out_fd);
+		return (0);
+	}
 	else if (tok->out_a)
+	{
 		ft_handle_append(tok, out_fd);
-	return ;
+		return (0);
+	}
+	return (1);
 }

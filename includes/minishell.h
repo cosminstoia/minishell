@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/15 21:50:24 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 13:59:38 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char		**ft_make_env_path(t_token *tok, t_cnst *consts);
 void		ft_handle_sig(void);
 
 /* redirections.c: function to handle the redirections */
-void		ft_redirect(t_token *tok);
+int		ft_redirect(t_token *tok);
 
 /* execute.c: function to handle the execution */
 void		ft_execute(t_token *tok, t_cnst *consts);

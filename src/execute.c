@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/15 21:50:23 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/17 14:01:55 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,9 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 {
 	int	pipefd[2];
 	int	index;
-	int	output_fd;
 	int	saved_stdin;
 	int	saved_stdout;
 
-	output_fd = -1;
 	index = 0;
 	while (index < consts->tok_num)
 	{
@@ -86,21 +84,19 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 				perror("pipe error");
 				exit(EXIT_FAILURE);
 			}
-			output_fd = pipefd[1];
 		}
-		else
-			output_fd = STDOUT_FILENO;
 		if (ft_is_builtin(tok[index].cmd[0]))
 		{
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
-			ft_redirect(&tok[index]);
-			ft_execute_builtins(tok, consts, index, output_fd);
+			if (ft_redirect(&tok[index]))
+				ft_execute_builtins(tok, consts, index, pipefd[1]);
+			else
+				ft_execute_builtins(tok, consts, index, STDOUT_FILENO);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
 			close(saved_stdin);
 			close(saved_stdout);
-			return ;
 		}
 		else
 		{
@@ -119,5 +115,4 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 		index++;
 	}
 	ft_wait(tok, consts);
-	// printf("%d\n", tok->exit_code);
 }
