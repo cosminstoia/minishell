@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:53:09 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/17 16:41:01 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:35:41 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,30 +97,50 @@ char	*ft_remake_cmd(t_token *tok, t_cnst *consts, char *cmd_str, int dol_num)
 		i++;
 		dol_num++;
 	}
-	cmd_new[i] = '\0';
 	free(cmd_str);
 	return(cmd_new);
 }
 
 /* function to convert the int of the exit code number into a string and add it
  to the existing string of the command */
-char	*ft_make_exit_code(t_cnst *consts, t_token *tok_current, int index, int i)
+char	*ft_make_exit_code(t_cnst *consts, t_token *tok_current, int index, int dol_num)
 {
 	char	*new_cmd;
+	char	*exit_code_str;
 	int		strlen;
-	int		temp_exit_code;
+	int		i;
+	int		j;
 
-	strlen = 0;
-	temp_exit_code = consts->exit_code;//need to add in the rest of the string before and after the $?
-	while (temp_exit_code > 0)
-	{
-		strlen++;
-		temp_exit_code /= 10;
-	}
-	new_cmd = (char *)malloc((i + strlen) * sizeof(char));
+	i = dol_num;
+	j = 0;
+	while (tok_current->cmd[index][i] != '\0')
+		i++;
+	i--;
+	exit_code_str = ft_itoa(consts->exit_code);
+	strlen = i + ft_strlen(exit_code_str);
+	new_cmd = (char *)malloc(strlen * sizeof(char));
 	if (new_cmd == NULL)
-		return (new_cmd);
-	new_cmd = ft_itoa(consts->exit_code);
+		return (NULL);
+	i = 0;
+	while (i < dol_num)
+	{
+		new_cmd[i] = tok_current->cmd[index][i];
+		i++;
+	}
+	while (exit_code_str[j] != '\0')
+	{
+		new_cmd[i] = exit_code_str[j];
+		i++;
+		j++;
+	}
+	dol_num+=2;
+	while (tok_current->cmd[index][dol_num] != '\0')
+	{
+		new_cmd[i] = tok_current->cmd[index][dol_num];
+		i++;
+		dol_num++;
+	}
+	new_cmd[i] = '\0';
 	free(tok_current->cmd[index]);
 	return (new_cmd);
 }
@@ -145,21 +165,44 @@ char	**ft_expand_dollar(t_token *tok, t_cnst *consts, t_token *tok_current)
 					i++;
 				i++;
 			}
+			else if (tok_current->cmd[index][i] == '"')
+			{
+				i++;
+				while (tok_current->cmd[index][i] != '"')
+				{
+					if (tok_current->cmd[index][i] == '$')
+					{
+						if (tok_current->cmd[index][i + 1] == '\0' || tok_current->cmd[index][i + 1] == '"' || tok_current->cmd[index][i + 1] == ' ' || tok_current->cmd[index][i + 1] == '\t')
+							i++;
+						else if (tok_current->cmd[index][i + 1] == '?')
+						{
+							tok_current->cmd[index] = ft_make_exit_code(consts, tok_current, index, i);
+							if (tok_current->cmd[index] == NULL)
+								ft_cleanup(tok, consts, errno);
+						}
+						else
+							tok_current->cmd[index] = ft_remake_cmd(tok, consts, tok_current->cmd[index], i);
+						while (tok_current->cmd[index][i] != '"' && tok_current->cmd[index][i] != '$')
+							i++;
+					}
+					else
+						i++;
+				}
+				i++;
+			}
 			else if (tok_current->cmd[index][i] == '$')
 			{
-				if (tok_current->cmd[index][i + 1] == '?')
+				if (tok_current->cmd[index][i + 1] == '\0' || tok_current->cmd[index][i + 1] == ' ' || tok_current->cmd[index][i + 1] == '\t')
+					i++;
+				else if (tok_current->cmd[index][i + 1] == '?')
 				{
-					// printf("BEFORE consts->exit_code = %d\n", tok_current->exit_code);
-					// printf("BEFORE tok_current->cmd[index] = %s\n", tok_current->cmd[index]);
 					tok_current->cmd[index] = ft_make_exit_code(consts, tok_current, index, i);
 					if (tok_current->cmd[index] == NULL)
 						ft_cleanup(tok, consts, errno);
-					// printf("AFTER consts->exit_code = %d\n", tok_current->exit_code);
-					// printf("AFTER tok_current->cmd[index] = %s\n", tok_current->cmd[index]);
 				}
 				else
 					tok_current->cmd[index] = ft_remake_cmd(tok, consts, tok_current->cmd[index], i);
-				while (tok_current->cmd[index][i] != '\0' && tok_current->cmd[index][i] != ' ' && tok_current->cmd[index][i] != '\t' && tok_current->cmd[index][i] != '\'' && tok_current->cmd[index][i] != '"')
+				while (tok_current->cmd[index][i] != '\0' && tok_current->cmd[index][i] != ' ' && tok_current->cmd[index][i] != '\t' && tok_current->cmd[index][i] != '\'' && tok_current->cmd[index][i] != '"' && tok_current->cmd[index][i] != '$')
 					i++;
 			}
 			else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:45:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/17 14:10:34 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/18 17:49:47 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void ft_execute_builtins(t_token *tok, t_cnst *consts, int index, int output_fd)
     else if (ft_strncmp(tok[index].cmd[0], "export", 7) == 0)
         ft_execute_export(&tok[index], consts);
     else if (ft_strncmp(tok->cmd[0], "exit", 5) == 0)
-        ft_execute_exit(&tok[index], consts);
+        ft_execute_exit(tok, consts, &tok[index]);
 }
 
 
