@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/17 15:24:08 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:56:00 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@ static void	ft_handle_infile(t_token *tok, int in_fd)
 	if (in_fd < 0)
 	{
 		perror("open input file");
-		exit(EXIT_FAILURE);
 	}
 	if (dup2(in_fd, STDIN_FILENO) < 0)
 	{
 		perror("dup2 input");
 		close(in_fd);
-		exit(EXIT_FAILURE);
 	}
 	close(in_fd);
 }
@@ -36,15 +34,11 @@ static void	ft_handle_outfile(t_token *tok, int out_fd)
 {
 	out_fd = open(tok->out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (out_fd < 0)
-	{
 		perror("open output file");
-		exit(EXIT_FAILURE);
-	}
 	if (dup2(out_fd, STDOUT_FILENO) < 0)
 	{
 		perror("dup2 output");
 		close(out_fd);
-		exit(EXIT_FAILURE);
 	}
 	close(out_fd);
 }
@@ -56,36 +50,35 @@ static void	ft_handle_append(t_token *tok, int out_fd)
 	if (out_fd < 0)
 	{
 		perror("open append output file");
-		exit(EXIT_FAILURE);
 	}
 	if (dup2(out_fd, STDOUT_FILENO) < 0)
 	{
 		perror("dup2 append output");
 		close(out_fd);
-		exit(EXIT_FAILURE);
 	}
 	close(out_fd);
 }
 
 // If there is a heredoc, the function reads the lines of user input until the
 // delimeter is reached, then changes the fd of the heredoc to 0(stdin)
-static void	ft_handle_heredoc(t_token *tok, int in_fd)
+void	ft_handle_heredoc(t_token *tok, int in_fd)
 {
 	char	*input;
 	int		len;
 
 	in_fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (in_fd < 0)
-	{
 		perror("open input file");
-		exit(EXIT_FAILURE);
-	}
 	while (1)
 	{
 		rl_on_new_line();
-		input = readline(">");
+		input = readline("> ");
 		if (!ft_strncmp(input, tok->heredoc, ft_strlen(tok->heredoc)))
-			break;
+		{
+			if (unlink("heredoc") < 0)
+				perror("unlink heredoc");
+			return ;
+		}
 		len = 0;
 		len = ft_strlen(input);
 		write(in_fd, input, len);
@@ -95,9 +88,10 @@ static void	ft_handle_heredoc(t_token *tok, int in_fd)
 	{
 		perror("dup2 input");
 		close(in_fd);
-		exit(EXIT_FAILURE);
 	}
-	close(in_fd);//  need to delete the heredoc after it has been read from - use the unlink function
+	close(in_fd);
+	if (unlink("heredoc") < 0)
+		perror("unlink heredoc");
 }
 
 int	ft_redirect(t_token *tok)
@@ -114,8 +108,8 @@ int	ft_redirect(t_token *tok)
 	}
 	else if (tok->heredoc)
 	{
-		ft_handle_heredoc(tok, in_fd);// need to fugure this out, bash does some weird things if there is a heredoc and an infile!
-		return (0);	
+		ft_handle_heredoc(tok, in_fd); // need to fugure this out, bash does some weird things if there is a heredoc and an infile!
+		return (0);
 	}
 	if (tok->out)
 	{

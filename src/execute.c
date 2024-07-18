@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/17 15:25:28 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/18 19:12:07 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,27 @@ void	ft_execute_parent(t_token *tok, int index, int pipefd[2],
 	}
 }
 
+static void	ft_handle_red_no_arg(t_token *tok, int index)
+{
+	int	fd;
+
+	fd = 0;
+	if (tok[index].cmd[0] == NULL)
+	{
+		if (tok->out != NULL)
+			fd = open(tok->out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else if (tok->out_a != NULL)
+			fd = open(tok->out_a, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else if (tok->in != NULL)
+		{
+			fd = open(tok->in, O_RDONLY, 0644);
+			if (fd < 0)
+				perror("open input file");
+		}
+		else if (tok->heredoc != NULL)
+			ft_handle_heredoc(tok, fd);
+	}
+}
 void	ft_execute(t_token *tok, t_cnst *consts)
 {
 	int	pipefd[2];
@@ -84,6 +105,11 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 				perror("pipe error");
 				exit(EXIT_FAILURE);
 			}
+		}
+		if (tok[index].cmd[0] == NULL)
+		{
+			ft_handle_red_no_arg(tok, index);
+			return;
 		}
 		if (ft_is_builtin(tok[index].cmd[0]))
 		{
@@ -110,8 +136,6 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 		if (index < consts->tok_num - 1)
 			tok[index + 1].input_fd = pipefd[0];
 		close(pipefd[1]);
-		if (tok[index].heredoc)// is this the right place for this to be ???????????????????????????????
-			unlink("heredoc");
 		index++;
 	}
 	ft_wait(tok, consts);
