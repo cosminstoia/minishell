@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/12 01:35:51 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/18 18:36:34 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_execute_cd(t_token *tok, t_cnst *consts)
 	target_directory = NULL;
 	if (tok->cmd[1] != NULL && ft_strncmp(tok->cmd[1], "-", 2) == 0)
 	{
-		target_directory = ft_return_env_var(consts, "OLDPWD");
+		target_directory = ft_return_env_var(consts, "OLDPWD=");
 		if (target_directory == NULL)
 			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
 		else
@@ -123,7 +123,7 @@ void	ft_execute_unset(t_token *tok, t_cnst *consts)
 		else
 			i++;
 	}
-	if (ft_strncmp(tok->cmd[1], "PATH", 5) == 0)
+	if (ft_strncmp(tok->cmd[1], "PATH=", 5) == 0)
 	{
 		ft_free_splits(consts->env_p);
 		consts->env_p = NULL;

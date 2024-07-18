@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/17 17:39:15 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:20:03 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,19 @@ char	ft_no_redir_name(char *input, char err_char, int i)
 /* function to check if there are any syntax errors in the redirects */
 char	ft_redir_error(char *input, char err_char)
 {
-	int	i;
+	char	quote_symb;
+	int		i;
 
 	i = 0;
 	while (input[i] != '\0')
 	{
+		if (input[i] == '\'' || input[i] == '"')
+		{
+			quote_symb = input[i];
+			i++;
+			while (input[i] != quote_symb)
+				i++;
+		}
 		if (input[i] == '<')
 		{
 			if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i + 2] == '>'))
@@ -193,7 +201,7 @@ char	*ft_return_env_var(t_cnst *consts, char *find_str)
 	while (consts->environ[i])
 	{
 		if (!ft_strncmp(find_str, consts->environ[i], strlen))
-			return (&consts->environ[i][strlen + 1]);
+			return (&consts->environ[i][strlen]);
 		i++;
 	}
 	return (NULL);
@@ -207,7 +215,7 @@ char	**ft_make_env_path(t_token *tok, t_cnst *consts)
 
 	// if (consts->env_p != NULL)
 	// 	free(consts->env_p);
-	env_path_str = ft_return_env_var(consts, "PATH");
+	env_path_str = ft_return_env_var(consts, "PATH=");
 	consts->env_p = ft_split_ms(env_path_str, ':');
 	if (consts->env_p == NULL)
 		ft_cleanup(tok, consts, errno);
