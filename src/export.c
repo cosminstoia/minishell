@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/17 17:00:50 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:20:52 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,35 +107,46 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 }
 
 // Function to replicate the bash command exit
-void	ft_execute_exit(t_token *tok, t_cnst *consts)
+void	ft_execute_exit(t_token *tok, t_cnst *consts, t_token *tok_current)
 {
 	int	exit_no;
 	int	i;
 	int	num_check;
 
-	i = 4;
+	i = 0;
 	exit_no = 0;
-	while (consts->input[i] == ' ' || consts->input[i] == '\t')
+
+	while (tok_current->cmd[i] != NULL)
 		i++;
-	num_check = i;
-	while (consts->input[num_check] != '\0')
+	if (i > 2)
 	{
-		if (consts->input[num_check] != '-' && consts->input[num_check] != '+' && !(consts->input[num_check] >= '0' && consts->input[num_check] <= '9'))
-		{
-			printf("exit: %s: numeric argument required\n", &consts->input[i]);
-			exit_no = 255;
-			break ;
-		}
-		num_check++;
+		printf("exit\nminishell: exit: too many arguments\n");
+		ft_cleanup(tok, consts, 1);
 	}
-	if (consts->input[num_check] == '\0')
+	else if (i == 2)
 	{
-		exit_no = ft_atoi(&consts->input[i]);
-		if (exit_no > 255)
-			exit_no = exit_no % 256;
-		if (exit_no < 0)
-			exit_no = 256 + exit_no;
+		i = 0;
+		while (tok_current->cmd[1][i] == ' ' || tok_current->cmd[1][i] == '\t')
+			i++;
+		num_check = i;
+		while (tok_current->cmd[1][num_check] != '\0')
+		{
+			if (tok_current->cmd[1][num_check] != '-' && tok_current->cmd[1][num_check] != '+' && !(tok_current->cmd[1][num_check] >= '0' && tok_current->cmd[1][num_check] <= '9'))
+			{
+				printf("minishell: exit: %s: numeric argument required\n", &tok_current->cmd[1][i]);
+				exit_no = 255;
+				break ;
+			}
+			num_check++;
+		}
+		if (tok_current->cmd[1][num_check] == '\0')
+		{
+			exit_no = ft_atoi(&tok_current->cmd[1][i]);
+			if (exit_no > 255)
+				exit_no = exit_no % 256;
+			if (exit_no < 0)
+				exit_no = 256 + exit_no;
+		}
 	}
 	ft_cleanup(tok, consts, exit_no);
-	exit(exit_no);
 }

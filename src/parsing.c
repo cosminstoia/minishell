@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:27:39 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/15 18:59:49 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/18 16:05:11 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,19 +82,14 @@ t_token	*ft_init_tok(t_token *tok, int index)
 // function to copy the string from input until the next pipe
 int	ft_cpy_tok_str(char *input, char *tok_str, int i, int len)
 {
-	int		j;
+	int	j;
 
 	j = 0;
 	while (j < len - 1)
 	{
-		if (input[i] == '\\' || input[i] == ';')
-			i++;
-		else
-		{
-			tok_str[j] = input[i];
-			i++;
-			j++;
-		}
+		tok_str[j] = input[i];
+		i++;
+		j++;
 	}
 	tok_str[j] = '\0';
 	return (i);
@@ -116,9 +111,7 @@ int	ft_strlen_tokstr(char *input, int len, int i)
 			while (input[len + i] != '"')
 				len++;
 		}
-		else if (input[len + i] == '\\' || input[len + i] == ';')
-			i++;
-		if (input[len + i] != '\0')
+		if (input[len + i] != '\0' || input[len + i] != '|')
 			len++;
 	}
 	len++;

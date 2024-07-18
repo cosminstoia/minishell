@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:15:31 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/27 13:56:28 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/18 15:07:01 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,19 @@ t_token	*ft_fill_tok(t_token *tok, t_cnst *consts, char *tok_str, int index)
 
 void	ft_redir_file(t_token *tok, t_cnst *consts, char *tok_str, int index)
 {
-	int	i;
+	char	quote_symb;
+	int		i;
 
 	i = 0;
 	while (tok_str[i] != '\0')
 	{
+		if (tok_str[i] == '\'' || tok_str[i] == '"')
+		{
+			quote_symb = tok_str[i];
+			i++;
+			while (tok_str[i] != quote_symb)
+				i++;
+		}
 		if (tok_str[i] == '>' && tok_str[i + 1] == '>')
 		{
 			tok[index].out_a = ft_cpy_redir(tok, consts, &tok[index].out_a[0], &tok_str[i + 2]);

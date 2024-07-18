@@ -88,7 +88,7 @@ void 		ft_execute_pwd(int output_fd);
 void 		ft_execute_env(t_cnst *consts, int output_fd);
 void		ft_execute_unset(t_token *tok, t_cnst *consts);
 void		ft_execute_export(t_token *tok, t_cnst *consts);
-void		ft_execute_exit(t_token *tok, t_cnst *consts);
+void		ft_execute_exit(t_token *tok, t_cnst *consts, t_token *tok_current);
 
 /* cleanup.c: functions to free allocated memory and exit minishell */
 void		ft_free_splits(char **array);
