@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/18 18:36:34 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:33:48 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,16 @@ void	ft_execute_pwd(int output_fd)
 void	ft_execute_env(t_cnst *consts, int output_fd)
 {
 	char	**env;
+	char	*underscore_var;
 
+	underscore_var = "_=";
 	env = consts->environ;
 	while (*env)
 	{
-		ft_putstr_fd(*env, output_fd);
+		if (ft_strncmp(*env, underscore_var, 2) == 0)
+			ft_putstr_fd("_=/usr/bin/env", output_fd);
+		else
+			ft_putstr_fd(*env, output_fd);
 		write(output_fd, "\n", 1);
 		env++;
 	}

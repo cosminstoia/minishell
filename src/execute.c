@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/18 19:12:07 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/19 17:43:44 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2])
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 	}
-	ft_redirect(&tok[index]);
+	ft_redirect(&tok[index], pipefd[1]);
 	tok[index].path = ft_make_path(tok, consts, index);
 	execve(tok[index].path, tok[index].cmd, consts->environ);
 }
@@ -115,7 +115,7 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 		{
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
-			if (ft_redirect(&tok[index]) && index < consts->tok_num - 1)
+			if (ft_redirect(&tok[index], pipefd[1]) && index < consts->tok_num - 1)
 				ft_execute_builtins(tok, consts, index, pipefd[1]);
 			else
 				ft_execute_builtins(tok, consts, index, STDOUT_FILENO);
