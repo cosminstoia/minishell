@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/18 16:57:17 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/19 17:43:22 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,10 @@ char		ft_no_redir_name(char *input, char err_char, int i);
 
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);
+void 		ft_handle_sig_heredoc(void);
 
 /* redirections.c: function to handle the redirections */
-int			ft_redirect(t_token *tok);
+int			ft_redirect(t_token *tok, int out_fd);
 void		ft_handle_heredoc(t_token *tok, int in_fd);
 
 /* execute.c: function to handle the execution */
