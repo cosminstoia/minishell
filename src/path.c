@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/17 17:48:17 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:58:01 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,8 @@ char	*ft_make_path(t_token *tok, t_cnst *consts, int index)
 	return (tok[index].path);
 }
 
+// function to check if the command can work as the path for execve and if not
+// to print an error message
 char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 {
 	int	error;
@@ -133,7 +135,23 @@ char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 	{
 		ft_cleanup(tok, consts, errno);
 	}
-	if (access(tok[index].cmd[0], X_OK) == -1)
-		printf("minishell: %s: command not found\n", tok[index].path);
+	if (access(tok[index].cmd[0], F_OK | X_OK) == -1)
+	{
+		if (errno == ENOENT)
+		{
+			perror(tok[index].cmd[0]);
+			consts->exit_code = 127;
+		}
+		else if (errno == EACCES)
+		{
+			perror(tok[index].cmd[0]);
+			consts->exit_code = 126;
+		}
+		else
+		{
+			perror(tok[index].cmd[0]);
+		}
+		return NULL;
+	}
 	return (tok[index].path);
 }
