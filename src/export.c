@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/18 18:20:52 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:02:08 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,41 @@
 // Function to check if there is provided an argument
 static int	ft_check_argument(t_token *tok, t_cnst *consts)
 {
-	int		i;
+	int		index;
 	char	*equal_sign;
+	int		i;
 
 	if (tok->cmd[1] == NULL)
 	{
-		i = 0;
-		while (consts->environ[i] != NULL)
+		index = 0;
+		while (consts->environ[index] != NULL)
 		{
-			equal_sign = ft_strchr(consts->environ[i], '=');
+			equal_sign = ft_strchr(consts->environ[index], '=');
 			if (equal_sign)
 			{
 				ft_putstr_fd("declare -x ", STDOUT_FILENO);
-				ft_putstr_fd(consts->environ[i], STDOUT_FILENO);
+				i = 0;
+				while (consts->environ[index][i] != '=')
+				{
+					write(STDOUT_FILENO, &consts->environ[index][i], 1);
+					i++;
+				}
+				i++;
+				write(STDOUT_FILENO, "=\"", 2);
+				while (consts->environ[index][i] != '\0')
+				{
+					write(STDOUT_FILENO, &consts->environ[index][i], 1);
+					i++;
+				}
+				write(STDOUT_FILENO, "\"\n", 2);
 			}
 			else
 			{
 				ft_putstr_fd("declare -x ", STDOUT_FILENO);
-				ft_putstr_fd(consts->environ[i], STDOUT_FILENO);
-				ft_putstr_fd("=\"\"", STDOUT_FILENO);
+				ft_putstr_fd(consts->environ[index], STDOUT_FILENO);
+				ft_putstr_fd("\n", STDOUT_FILENO);
 			}
-			ft_putstr_fd("\n", STDOUT_FILENO);
-			i++;
+			index++;
 		}
 		return (0);
 	}
@@ -75,6 +88,32 @@ static void	ft_add_var(t_cnst *consts, char *new_var, int i)
 		consts->environ[i] = new_var;
 }
 
+// Function to realloc the environment variable 2D array so an extra environment
+// variable can be added.
+static char	**ft_realloc_env(t_token *tok, t_cnst *consts)
+{
+	char	**new_env;
+	int		index;
+
+	index = 0;
+	while (consts->environ[index])
+		index++;
+	new_env = (char **)malloc((index + 2) * sizeof(char *));
+	if (new_env == NULL)
+		ft_cleanup(tok, consts, errno);
+	index = 0;
+	while (consts->environ[index])
+	{
+		new_env[index] = consts->environ[index];
+		index++;
+	}		
+	new_env[index] = NULL;
+	index++;
+	new_env[index] = NULL;
+	free(consts->environ);
+	return (new_env);
+}
+
 // Function to execute the "export" command
 void	ft_execute_export(t_token *tok, t_cnst *consts)
 {
@@ -88,9 +127,18 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 
 	if (!ft_check_argument(tok, consts))
 		return ;
+	consts->environ = ft_realloc_env(tok, consts);
 	equal_sign = ft_strchr(tok->cmd[1], '=');
 	if (equal_sign == NULL)
+	{
+		i = 0;
+		while (consts->environ[i])
+			i++;
+		consts->environ[i] = ft_strdup(tok->cmd[1]);
+		if (consts->environ[i] == NULL)
+			ft_cleanup(tok, consts, errno);
 		return ;
+	}
 	*equal_sign = '\0';
 	var_name = tok->cmd[1];
 	value = equal_sign + 1;
@@ -148,5 +196,6 @@ void	ft_execute_exit(t_token *tok, t_cnst *consts, t_token *tok_current)
 				exit_no = 256 + exit_no;
 		}
 	}
+	printf("exit\n");
 	ft_cleanup(tok, consts, exit_no);
 }
