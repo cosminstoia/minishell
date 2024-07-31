@@ -3,36 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:45:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/18 17:49:47 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:28:55 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 // Functions that execute the builtin commands
-void ft_execute_builtins(t_token *tok, t_cnst *consts, int index, int output_fd)
+void	ft_execute_builtins(t_token *tok, t_cnst *consts, int index,
+		int output_fd)
 {
-    tok->cmd = ft_expand_dollar(tok, consts, &tok[index]);
+	tok->cmd = ft_expand_dollar(tok, consts, &tok[index]);
 	tok->cmd = ft_remove_quotes(tok[index].cmd);
-    if (ft_strncmp(tok[index].cmd[0], "echo", 5) == 0)
-        ft_execute_echo(&tok[index], output_fd);
-    else if (ft_strncmp(tok[index].cmd[0], "cd", 3) == 0)
-        ft_execute_cd(&tok[index], consts);
-    else if (ft_strncmp(tok[index].cmd[0], "pwd", 4) == 0)
-        ft_execute_pwd(output_fd);
-    else if (ft_strncmp(tok[index].cmd[0], "env", 4) == 0)
-        ft_execute_env(consts, output_fd);
-    else if (ft_strncmp(tok[index].cmd[0], "unset", 6) == 0)
-        ft_execute_unset(&tok[index], consts);
-    else if (ft_strncmp(tok[index].cmd[0], "export", 7) == 0)
-        ft_execute_export(&tok[index], consts);
-    else if (ft_strncmp(tok->cmd[0], "exit", 5) == 0)
-        ft_execute_exit(tok, consts, &tok[index]);
+	if (ft_strncmp(tok[index].cmd[0], "echo", 5) == 0)
+		ft_execute_echo(&tok[index], output_fd);
+	else if (ft_strncmp(tok[index].cmd[0], "cd", 3) == 0)
+		ft_execute_cd(&tok[index], consts);
+	else if (ft_strncmp(tok[index].cmd[0], "pwd", 4) == 0)
+		ft_execute_pwd(output_fd);
+	else if (ft_strncmp(tok[index].cmd[0], "env", 4) == 0)
+		ft_execute_env(consts, output_fd);
+	else if (ft_strncmp(tok[index].cmd[0], "unset", 6) == 0)
+		ft_execute_unset(&tok[index], consts);
+	else if (ft_strncmp(tok[index].cmd[0], "export", 7) == 0)
+		ft_execute_export(&tok[index], consts);
+	else if (ft_strncmp(tok->cmd[0], "exit", 5) == 0)
+		ft_execute_exit(tok, consts, &tok[index]);
 }
-
 
 // Function that checks if a command is a builtin or not
 int	ft_is_builtin(char *cmd)
