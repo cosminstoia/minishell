@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/19 17:43:22 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/07/31 13:21:37 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <limits.h>
 # include <termios.h>
 
-int got_sig;
+int g_got_sig;
 
 /* struct with all the variables required to execute one command */
 typedef struct s_token
@@ -55,6 +55,60 @@ typedef struct s_cnst
 
 /* Functions prototypes */
 
+/* builtins_exec.c: functions to execute the builtin functions */
+void		ft_execute_builtins(t_token *tok, t_cnst *consts, int index, int output_fd);
+int			ft_is_builtin(char *cmd);
+
+/* builtins.c: functions to handle the builtin functions */
+void 		ft_execute_echo(t_token *tok, int output_fd);
+void		ft_execute_cd(t_token *tok, t_cnst *consts);
+void 		ft_execute_pwd(int output_fd);
+void 		ft_execute_env(t_cnst *consts, int output_fd);
+
+/* cleanup.c: functions to free allocated memory and exit minishell */
+void		ft_free_splits(char **array);
+void		ft_free_tok(t_token *tok, t_cnst *consts);
+void		ft_free_const(t_cnst *consts);
+void		ft_cleanup(t_token *tok, t_cnst *consts, int exit_no);
+void		ft_exit(t_cnst *consts);
+
+/* execute_utils.c: function to handle the execution */
+void		ft_wait(t_token *tok, t_cnst *consts);
+void		ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2]);
+void		ft_execute_parent(t_token *tok, int index, int pipefd[2], t_cnst *consts);
+void		ft_handle_red_no_arg(t_token *tok, int index);
+
+/* execute.c: function to handle the execution */
+void		ft_execute(t_token *tok, t_cnst *consts);
+
+/* exit.c: function to handle the exit function */
+void		ft_execute_exit(t_token *tok, t_cnst *consts, t_token *tok_current);
+
+/* export_utils.c: function to handle the export utility functions */
+int			ft_check_argument(t_token *tok, t_cnst *consts);
+int			ft_check_var(t_token *tok, t_cnst *consts);
+void		ft_add_var(t_cnst *consts, char *new_var, int i);
+char		**ft_realloc_env(t_token *tok, t_cnst *consts);
+
+/* export.c: function to handle the export utility functions */
+void		ft_execute_export(t_token *tok, t_cnst *consts);
+
+/* fill_tokens.c: functions to fill the tok struct with the data from input */
+t_token		*ft_fill_tok(t_token *tok, t_cnst *consts,	char *tok_str, int index);
+void		ft_redir_file(t_token *tok, t_cnst *consts, char *tok_str, int index);
+char		*ft_cpy_redir(t_token *tok, t_cnst *consts, char *tok_str, char *str);
+
+/* final_cmd.c functions to finalise the cmd strings before execution */
+int			ft_strlen_cmd(t_cnst *consts, char *cmd_str, int strlen, int dol_num);
+int			ft_cpyvar(t_cnst *consts, char *cmd_str, char *cmd_new);
+char		*ft_remake_cmd(t_token *tok, t_cnst *consts, char *cmd_str, int dol_num);
+char		**ft_expand_dollar(t_token *tok, t_cnst *consts, t_token *tok_current);
+char 		**ft_remove_quotes(char **cmd);
+char		*ft_make_exit_code(t_cnst *consts, t_token *tok_current, int index, int i);
+
+/* heredoc.c */
+void		ft_handle_heredoc(t_token *tok, int in_fd);
+
 /* minishell.c : */
 int			ft_input_error(t_cnst *consts, char *input);
 int			ft_quotes_close(char *input);
@@ -65,39 +119,6 @@ char		**ft_make_env_path(t_token *tok, t_cnst *consts);
 char		ft_only_pipe(char *input, char err_char);
 char		ft_no_redir_name(char *input, char err_char, int i);
 
-/* signals.c: function to handle the signals */
-void		ft_handle_sig(void);
-void 		ft_handle_sig_heredoc(void);
-
-/* redirections.c: function to handle the redirections */
-int			ft_redirect(t_token *tok, int out_fd);
-void		ft_handle_heredoc(t_token *tok, int in_fd);
-
-/* execute.c: function to handle the execution */
-void		ft_execute(t_token *tok, t_cnst *consts);
-void		ft_wait(t_token *tok, t_cnst *consts);
-char 		**ft_remove_quotes(char **cmd);
-
-/* builtins_exec.c: functions to execute the builtin functions */
-void		ft_execute_builtins(t_token *tok, t_cnst *consts, int index, int output_fd);
-int			ft_is_builtin(char *cmd);
-
-/* builtins.c: functions to handle the builtin functions */
-void 		ft_execute_echo(t_token *tok, int output_fd);
-void		ft_execute_cd(t_token *tok, t_cnst *consts);
-void 		ft_execute_pwd(int output_fd);
-void 		ft_execute_env(t_cnst *consts, int output_fd);
-void		ft_execute_unset(t_token *tok, t_cnst *consts);
-void		ft_execute_export(t_token *tok, t_cnst *consts);
-void		ft_execute_exit(t_token *tok, t_cnst *consts, t_token *tok_current);
-
-/* cleanup.c: functions to free allocated memory and exit minishell */
-void		ft_free_splits(char **array);
-void		ft_free_tok(t_token *tok, t_cnst *consts);
-void		ft_free_const(t_cnst *consts);
-void		ft_cleanup(t_token *tok, t_cnst *consts, int exit_no);
-void		ft_exit(t_cnst *consts);
-
 /* parsing.c: functions to parse the user input and create tokens of commands */
 t_token		*ft_parse_input(t_token *tok, t_cnst *consts);
 int			ft_token_num(char *input, int tok_num);
@@ -106,19 +127,6 @@ int			ft_cpy_tok_str(char *input, char *tok_str, int i, int len);
 t_token		*ft_make_toks(t_token *tok, t_cnst *consts, char *tok_str, int tok_no);
 int			ft_strlen_tokstr(char *input, int len, int i);
 int			ft_check_quotes(char *input, int i);
-
-/* split.c: functions to split env PATH and commands into an array of strings*/
-char		**ft_split_ms(char *str, char c);
-int			ft_skip_quotes(char *str, int i);
-int			ft_strnum_ms(char *str, char c, int strnum);
-int			ft_strlen_ms(char *str, char c, int strlen);
-int			ft_copystr_ms(char **strstr, char *str, char c, int index);
-int			ft_env_var(char **strstr, char *str, char c, int index);
-
-/* fill_tokens.c: functions to fill the tok struct with the data from input */
-t_token		*ft_fill_tok(t_token *tok, t_cnst *consts,	char *tok_str, int index);
-void		ft_redir_file(t_token *tok, t_cnst *consts, char *tok_str, int index);
-char		*ft_cpy_redir(t_token *tok, t_cnst *consts, char *tok_str, char *str);
 
 /* path.c functions to create the path needed by execve to execute a command */
 int			ft_strcpy_ms(char *cmd, char **path);
@@ -129,12 +137,23 @@ void		ft_print_err(t_token *tok, t_cnst *consts, char *path);
 char		*ft_make_path(t_token *tok, t_cnst *consts, int index);
 char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
 
-/* final_cmd.c functions to finalise the cmd strings before execution */
-int			ft_strlen_cmd(t_cnst *consts, char *cmd_str, int strlen, int dol_num);
-int			ft_cpyvar(t_cnst *consts, char *cmd_str, char *cmd_new);
-char		*ft_remake_cmd(t_token *tok, t_cnst *consts, char *cmd_str, int dol_num);
-char		**ft_expand_dollar(t_token *tok, t_cnst *consts, t_token *tok_current);
-char 		**ft_remove_quotes(char **cmd);
-char		*ft_make_exit_code(t_cnst *consts, t_token *tok_current, int index, int i);
+/* redirections.c: function to handle the redirections */
+int			ft_redirect(t_token *tok, int out_fd);
+void		ft_handle_heredoc(t_token *tok, int in_fd);
+
+/* signals.c: function to handle the signals */
+void		ft_handle_sig(void);
+void 		ft_handle_sig_heredoc(void);
+
+/* split.c: functions to split env PATH and commands into an array of strings*/
+char		**ft_split_ms(char *str, char c);
+int			ft_skip_quotes(char *str, int i);
+int			ft_strnum_ms(char *str, char c, int strnum);
+int			ft_strlen_ms(char *str, char c, int strlen);
+int			ft_copystr_ms(char **strstr, char *str, char c, int index);
+int			ft_env_var(char **strstr, char *str, char c, int index);
+
+/* unset.c functions to execute the unset function */
+void		ft_execute_unset(t_token *tok, t_cnst *consts);
 
 #endif

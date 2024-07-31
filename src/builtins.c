@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/22 16:23:25 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:30:12 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,7 @@ void	ft_execute_cd(t_token *tok, t_cnst *consts)
 		target_directory = tok->cmd[1];
 	current_directory = getcwd(NULL, 0);
 	if (chdir(target_directory) != 0)
-	{
-		perror("chdir");
-		return ;
-	}
+		return (perror("chdir"));
 }
 
 // Function to execute the "pwd" command
@@ -98,40 +95,5 @@ void	ft_execute_env(t_cnst *consts, int output_fd)
 		if (ft_strchr(*env, '='))
 			write(output_fd, "\n", 1);
 		env++;
-	}
-}
-
-// Function to unset an environment variable
-void	ft_execute_unset(t_token *tok, t_cnst *consts)
-{
-	int		i;
-	int		j;
-	size_t	len;
-
-	i = 0;
-	j = 0;
-	if (!tok->cmd[1])
-		return ;
-	len = ft_strlen(tok->cmd[1]);
-	while (consts->environ[i])
-	{
-		if (ft_strncmp(consts->environ[i], tok->cmd[1], len) == 0
-			&& consts->environ[i][len] == '=')
-		{
-			free(consts->environ[i]);
-			j = i;
-			while (consts->environ[j])
-			{
-				consts->environ[j] = consts->environ[j + 1];
-				j++;
-			}
-		}
-		else
-			i++;
-	}
-	if (ft_strncmp(tok->cmd[1], "PATH=", 5) == 0)
-	{
-		ft_free_splits(consts->env_p);
-		consts->env_p = NULL;
 	}
 }
