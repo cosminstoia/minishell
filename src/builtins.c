@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/30 14:30:12 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/01 18:04:49 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_execute_echo(t_token *tok, int output_fd)
 
 	i = 1;
 	newline = 1;
-	if (tok->cmd[i] && strncmp(tok->cmd[i], "-n", 3) == 0)
+	if (tok->cmd[i] && ft_strncmp(tok->cmd[i], "-n", 3) == 0)
 	{
 		newline = 0;
 		i++;
