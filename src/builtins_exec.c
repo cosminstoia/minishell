@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:45:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/06 18:27:56 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 19:50:52 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 void	ft_execute_builtins(t_token *tok, t_cnst *consts, int index,
 		int output_fd)
 {
-	tok->cmd = ft_expand_dollar(tok, consts, &tok[index]);
-	tok->cmd = ft_remove_quotes(tok[index].cmd);
+	tok[index].cmd = ft_expand_dollar(tok, consts, &tok[index]);
+	tok[index].cmd = ft_remove_quotes(tok[index].cmd);
 	if (ft_strncmp(tok[index].cmd[0], "echo", 5) == 0)
 		ft_execute_echo(&tok[index], output_fd);
 	else if (ft_strncmp(tok[index].cmd[0], "cd", 3) == 0)

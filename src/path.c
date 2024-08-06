@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/22 16:58:01 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:08:17 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,10 @@ char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 	{
 		if (errno == ENOENT)
 		{
-			perror(tok[index].cmd[0]);
+			write(STDERR_FILENO, "minishell: ", 11);
+			write(STDERR_FILENO, tok[index].cmd[0], ft_strlen(tok[index].cmd[0]));
+			write(STDERR_FILENO, ": ", 2);
+			write(STDERR_FILENO, "command not found\n", 18);
 			consts->exit_code = 127;
 		}
 		else if (errno == EACCES)
@@ -150,6 +153,7 @@ char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 		else
 		{
 			perror(tok[index].cmd[0]);
+			consts->exit_code = 1;
 		}
 		return NULL;
 	}

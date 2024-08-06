@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/06 18:06:40 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 19:50:06 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	ft_wait(t_token *tok, t_cnst *consts)
 
 void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2])
 {
-	tok->cmd = ft_expand_dollar(tok, consts, &tok[index]);
-	tok->cmd = ft_remove_quotes(tok[index].cmd);
+	tok[index].cmd = ft_expand_dollar(tok, consts, &tok[index]);
+	tok[index].cmd = ft_remove_quotes(tok[index].cmd);
 	if (index > 0)
 	{
 		dup2(tok[index].input_fd, STDIN_FILENO);
