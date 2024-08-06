@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/06 13:41:39 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 20:30:32 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,31 +160,19 @@ char	ft_redir_error(char *input, char err_char)
 /* function to check if there is no command before or after a pipe symbol */
 char	ft_only_pipe(char *input, char err_char)
 {
-	int last_pipe;
 	int	i;
 
-	last_pipe = 0;
 	i = 0;
-	while (input[i] == ' ' || input[i] == '\t')
-		i++;
-	if (input[i] == '|')
-		err_char = '|';
-	else
+	while (input[i] != '\0')
 	{
-		while (input[i] != '\0')
-		{
-			if (input[i] == '|')
-				last_pipe = i;
-			i++;
-		}
-		if (input[last_pipe] != '\0')
-			i = last_pipe + 1;
 		while (input[i] == ' ' || input[i] == '\t')
 			i++;
-		if (input[i] == '\0' && last_pipe > 0)
-			err_char = '|';
-		else if (last_pipe > 0 && (input[i] == '>' || input[i] == '<'))
-			err_char = input[i];
+		if (input[i] == '|')
+			return ('|');
+		while (input[i] != '\0' && input[i] != '|')
+			i++;
+		if (input[i] == '|')
+			i++;
 	}
 	return (err_char);
 }

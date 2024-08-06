@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:41:33 by gstronge          #+#    #+#             */
-/*   Updated: 2024/06/27 15:45:20 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 17:25:11 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,14 @@ void	ft_free_tok(t_token *tok, t_cnst *consts)
 			free(tok[index].in);
 		if (tok[index].out)
 			free(tok[index].out);
-		if (tok[index].out)
+		if (tok[index].out_a)
 			free(tok[index].out_a);
-		if (tok[index].out)
+		if (tok[index].heredoc)
 			free(tok[index].heredoc);
 		index++;
 	}
-	free(tok);
+	if (tok)
+		free(tok);
 }
 
 // individual parts of the consts struct are freed and then the struct itself
