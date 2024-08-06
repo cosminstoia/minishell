@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/01 18:04:49 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 18:29:03 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,14 @@ void	ft_execute_cd(t_token *tok, t_cnst *consts)
 		target_directory = tok->cmd[1];
 	current_directory = getcwd(NULL, 0);
 	if (chdir(target_directory) != 0)
-		return (perror("chdir"));
+	{
+		perror("cd");
+		consts->exit_code = 1;
+	}
 }
 
 // Function to execute the "pwd" command
-void	ft_execute_pwd(int output_fd)
+void	ft_execute_pwd(t_cnst *consts, int output_fd)
 {
 	char	cwd[PATH_MAX];
 
@@ -75,7 +78,10 @@ void	ft_execute_pwd(int output_fd)
 		write(output_fd, "\n", 1);
 	}
 	else
-		perror("getcwd() error");
+	{
+		perror("pwd");
+		consts->exit_code = 1;
+	}
 }
 
 // Function to execute the "env" command

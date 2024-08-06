@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/31 13:21:37 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 18:27:45 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int			ft_is_builtin(char *cmd);
 /* builtins.c: functions to handle the builtin functions */
 void 		ft_execute_echo(t_token *tok, int output_fd);
 void		ft_execute_cd(t_token *tok, t_cnst *consts);
-void 		ft_execute_pwd(int output_fd);
+void		ft_execute_pwd(t_cnst *consts, int output_fd);
 void 		ft_execute_env(t_cnst *consts, int output_fd);
 
 /* cleanup.c: functions to free allocated memory and exit minishell */
@@ -76,10 +76,13 @@ void		ft_exit(t_cnst *consts);
 void		ft_wait(t_token *tok, t_cnst *consts);
 void		ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2]);
 void		ft_execute_parent(t_token *tok, int index, int pipefd[2], t_cnst *consts);
-void		ft_handle_red_no_arg(t_token *tok, int index);
+void		ft_handle_red_no_arg(t_token *tok, t_cnst *consts, int index);
 
 /* execute.c: function to handle the execution */
 void		ft_execute(t_token *tok, t_cnst *consts);
+
+/* exit.c: function to handle the exit function */
+void		ft_set_exit(char *error, t_token *tok, t_cnst *consts, int exit_code);
 
 /* exit.c: function to handle the exit function */
 void		ft_execute_exit(t_token *tok, t_cnst *consts, t_token *tok_current);
@@ -107,7 +110,7 @@ char 		**ft_remove_quotes(char **cmd);
 char		*ft_make_exit_code(t_cnst *consts, t_token *tok_current, int index, int i);
 
 /* heredoc.c */
-void		ft_handle_heredoc(t_token *tok, int in_fd);
+void		ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd);
 
 /* minishell.c : */
 int			ft_input_error(t_cnst *consts, char *input);
@@ -138,8 +141,7 @@ char		*ft_make_path(t_token *tok, t_cnst *consts, int index);
 char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
 
 /* redirections.c: function to handle the redirections */
-int			ft_redirect(t_token *tok, int out_fd);
-void		ft_handle_heredoc(t_token *tok, int in_fd);
+int			ft_redirect(t_token *tok, t_cnst *consts, int out_fd);
 
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);

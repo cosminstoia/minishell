@@ -35,7 +35,8 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/export_utils.c \
 				$(SRC_DIR)/unset.c \
 				$(SRC_DIR)/execute_utils.c \
-				$(SRC_DIR)/heredoc.c
+				$(SRC_DIR)/heredoc.c \
+				$(SRC_DIR)/exit_code.c 
 
 # Objects
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

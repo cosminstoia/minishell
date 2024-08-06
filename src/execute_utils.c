@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/02 16:48:52 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 18:06:40 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	ft_execute_child(t_token *tok, t_cnst *consts, int index, int pipefd[2])
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 	}
-	ft_redirect(&tok[index], pipefd[1]);
 	tok[index].path = ft_make_path(tok, consts, index);
 	execve(tok[index].path, tok[index].cmd, consts->environ);
 }
@@ -65,7 +64,7 @@ void	ft_execute_parent(t_token *tok, int index, int pipefd[2],
 	}
 }
 
-void	ft_handle_red_no_arg(t_token *tok, int index)
+void	ft_handle_red_no_arg(t_token *tok, t_cnst *consts, int index)
 {
 	int	fd;
 
@@ -83,6 +82,6 @@ void	ft_handle_red_no_arg(t_token *tok, int index)
 				perror("open input file");
 		}
 		else if (tok->heredoc != NULL)
-			ft_handle_heredoc(tok, fd);
+			ft_handle_heredoc(tok, consts, fd);
 	}
 }

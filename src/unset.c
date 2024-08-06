@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:29:33 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/30 14:38:37 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 18:01:42 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ static void	remove_env_var(char *var, char **environ)
 	size_t	len;
 
 	i = 0;
-	len = strlen(var);
+	len = ft_strlen(var);
 	while (environ[i])
 	{
-		if (strncmp(environ[i], var, len) == 0 && environ[i][len] == '=')
+		if (ft_strncmp(environ[i], var, len) == 0 && environ[i][len] == '=')
 		{
 			free(environ[i]);
 			j = i;
@@ -35,16 +35,14 @@ static void	remove_env_var(char *var, char **environ)
 			break ;
 		}
 		else
-		{
 			i++;
-		}
 	}
 }
 
 // Function to handle special cases such as PATH
 static void	handle_special_cases(char *var, t_cnst *consts)
 {
-	if (strncmp(var, "PATH=", 5) == 0)
+	if (ft_strncmp(var, "PATH=", 5) == 0)
 	{
 		ft_free_splits(consts->env_p);
 		consts->env_p = NULL;
