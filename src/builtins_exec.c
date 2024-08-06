@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:45:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/30 14:28:55 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/06 18:27:56 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_execute_builtins(t_token *tok, t_cnst *consts, int index,
 	else if (ft_strncmp(tok[index].cmd[0], "cd", 3) == 0)
 		ft_execute_cd(&tok[index], consts);
 	else if (ft_strncmp(tok[index].cmd[0], "pwd", 4) == 0)
-		ft_execute_pwd(output_fd);
+		ft_execute_pwd(consts, output_fd);
 	else if (ft_strncmp(tok[index].cmd[0], "env", 4) == 0)
 		ft_execute_env(consts, output_fd);
 	else if (ft_strncmp(tok[index].cmd[0], "unset", 6) == 0)

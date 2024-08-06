@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:02:49 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/30 14:28:30 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/04 14:56:08 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	check_numeric_argument(char *arg, int *exit_no)
 		}
 		num_check++;
 	}
-	*exit_no = atoi(&arg[i]);
+	*exit_no = ft_atoi(&arg[i]);
 	if (*exit_no > 255)
 		*exit_no = *exit_no % 256;
 	if (*exit_no < 0)
