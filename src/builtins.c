@@ -3,10 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
 /*   Updated: 2024/08/08 15:35:05 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/08 11:29:13 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +109,22 @@ void	ft_execute_env(t_cnst *consts, int output_fd)
 			write(output_fd, "\n", 1);
 		env++;
 	}
+}
+
+/* function that tries to find a string in the environment variable list and if
+it finds a match, returns a pointer to the variable */
+char	*ft_return_env_var(t_cnst *consts, char *find_str)
+{
+	int	strlen;
+	int	i;
+
+	i = 0;
+	strlen = ft_strlen(find_str);
+	while (consts->environ[i])
+	{
+		if (!ft_strncmp(find_str, consts->environ[i], strlen))
+			return (&consts->environ[i][strlen]);
+		i++;
+	}
+	return (NULL);
 }

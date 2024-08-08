@@ -24,8 +24,11 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/cleanup.c \
 				$(SRC_DIR)/parsing.c \
 				$(SRC_DIR)/split.c \
+				$(SRC_DIR)/split_cont.c \
+				$(SRC_DIR)/token_count.c \
 				$(SRC_DIR)/fill_tokens.c \
 				$(SRC_DIR)/path.c \
+				$(SRC_DIR)/path_cont.c \
 				$(SRC_DIR)/execute.c \
 				$(SRC_DIR)/builtins.c \
 				$(SRC_DIR)/export.c \
@@ -36,6 +39,9 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/unset.c \
 				$(SRC_DIR)/execute_utils.c \
 				$(SRC_DIR)/heredoc.c \
+				$(SRC_DIR)/expand_dollar.c \
+				$(SRC_DIR)/expand_quotes_exit_code.c \
+				$(SRC_DIR)/input_error.c
 
 # Objects
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

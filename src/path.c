@@ -6,13 +6,13 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/06 20:08:17 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/08 12:44:32 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// function to copy the command name to the path variable in the struct
+/* function to copy the command name to the path variable in the struct */
 int	ft_strcpy_ms(char *cmd, char **path)
 {
 	int	strlen;
@@ -32,7 +32,7 @@ int	ft_strcpy_ms(char *cmd, char **path)
 	return (0);
 }
 
-// function that coppies the env PATH and command name to a combined string
+/* function that coppies the env PATH and command name to a combined string */
 char	*ft_path_name(char *path, char *command, char *str, char c)
 {
 	int	i;
@@ -56,8 +56,8 @@ char	*ft_path_name(char *path, char *command, char *str, char c)
 	return (str);
 }
 
-// function to calculate the length of a string that would combine an env PATH
-// string with the command name
+/* function to calculate the length of a string that would combine an env PATH
+string with the command name */
 int	ft_pathlen(char *env_path, char *command, int pathlen)
 {
 	int	i;
@@ -75,12 +75,13 @@ int	ft_pathlen(char *env_path, char *command, int pathlen)
 	return (pathlen);
 }
 
-// function to make a string that combines the each env PATH with the command
-// name, and then checks to see if the executable is found there and the shell
-// has access to execute the command
+/* function to make a string that combines the each env PATH with the command
+name, and then checks to see if the executable is found there and the shell
+has access to execute the command */
 char	*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index)
 {
 	int	pathlen;
+
 	if (consts->env_p == NULL)
 		return (tok[index].path);
 	while (consts->env_p[*sub_index] != NULL)
@@ -105,7 +106,7 @@ char	*ft_path_access(t_token *tok, t_cnst *consts, int *sub_index, int index)
 	return (tok[index].path);
 }
 
-// function to create a path to be used by execve to execute the command
+/* function to create a path to be used by execve to execute the command */
 char	*ft_make_path(t_token *tok, t_cnst *consts, int index)
 {
 	int	sub_index;
@@ -120,42 +121,6 @@ char	*ft_make_path(t_token *tok, t_cnst *consts, int index)
 	{
 		free(tok[index].path);
 		tok[index].path = ft_path_is_cmd(tok, consts, index);
-	}
-	return (tok[index].path);
-}
-
-// function to check if the command can work as the path for execve and if not
-// to print an error message
-char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
-{
-	int	error;
-
-	error = ft_strcpy_ms(tok[index].cmd[0], &tok[index].path);
-	if (error == -1)
-	{
-		ft_cleanup(tok, consts, errno);
-	}
-	if (access(tok[index].cmd[0], F_OK | X_OK) == -1)
-	{
-		if (errno == ENOENT)
-		{
-			write(STDERR_FILENO, "minishell: ", 11);
-			write(STDERR_FILENO, tok[index].cmd[0], ft_strlen(tok[index].cmd[0]));
-			write(STDERR_FILENO, ": ", 2);
-			write(STDERR_FILENO, "command not found\n", 18);
-			consts->exit_code = 127;
-		}
-		else if (errno == EACCES)
-		{
-			perror(tok[index].cmd[0]);
-			consts->exit_code = 126;
-		}
-		else
-		{
-			perror(tok[index].cmd[0]);
-			consts->exit_code = 1;
-		}
-		return NULL;
 	}
 	return (tok[index].path);
 }
