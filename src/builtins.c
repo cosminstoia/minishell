@@ -6,6 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
+/*   Updated: 2024/08/08 15:35:05 by cstoia           ###   ########.fr       */
 /*   Updated: 2024/08/08 11:29:13 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -25,6 +26,11 @@ void	ft_execute_echo(t_token *tok, int output_fd)
 		newline = 0;
 		i++;
 	}
+	if (tok->cmd[i] && ft_strncmp(tok->cmd[i], "~", 2) == 0)
+	{
+		ft_putstr_fd(getenv("HOME"), output_fd);
+		i++;
+	}
 	while (tok->cmd[i])
 	{
 		ft_putstr_fd(tok->cmd[i], output_fd);
@@ -40,14 +46,16 @@ void	ft_execute_echo(t_token *tok, int output_fd)
 void	ft_execute_cd(t_token *tok, t_cnst *consts)
 {
 	char	*target_directory;
-	char	*current_directory;
 
 	target_directory = NULL;
 	if (tok->cmd[1] != NULL && ft_strncmp(tok->cmd[1], "-", 2) == 0)
 	{
 		target_directory = ft_return_env_var(consts, "OLDPWD=");
 		if (target_directory == NULL)
+		{
 			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
+			return;
+		}
 		else
 			printf("%s\n", target_directory);
 	}
@@ -59,7 +67,6 @@ void	ft_execute_cd(t_token *tok, t_cnst *consts)
 	}
 	else
 		target_directory = tok->cmd[1];
-	current_directory = getcwd(NULL, 0);
 	if (chdir(target_directory) != 0)
 	{
 		perror("cd");
