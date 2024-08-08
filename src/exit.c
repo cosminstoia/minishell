@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:02:49 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/04 14:56:08 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/08 17:48:26 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ static int	validate_exit_arguments(t_token *tok_current)
 	if (i > 2)
 	{
 		printf("exit\nminishell: exit: too many arguments\n");
-		return (-1);
+		return (1);
 	}
-	return (i);
+	return (0);
 }
 
 // Function to check if the argument is numeric and convert it to an exit code
@@ -41,10 +41,11 @@ static int	check_numeric_argument(char *arg, int *exit_no)
 	while (arg[num_check] != '\0')
 	{
 		if (arg[num_check] != '-' && arg[num_check] != '+'
-			&& !isdigit(arg[num_check]))
+			&& !ft_isdigit(arg[num_check]))
 		{
-			printf("minishell: exit: %s: numeric argument required\n", &arg[i]);
-			return (255);
+			printf("exit\nminishell: exit: %s: numeric argument required\n",
+				&arg[i]);
+			return (1);
 		}
 		num_check++;
 	}
@@ -67,20 +68,20 @@ static void	handle_exit(t_token *tok, t_cnst *consts, int exit_no)
 void	ft_execute_exit(t_token *tok, t_cnst *consts, t_token *tok_current)
 {
 	int	exit_no;
-	int	validation_result;
 
 	exit_no = 0;
-	validation_result = validate_exit_arguments(tok_current);
-	if (validation_result == -1)
-	{
-		ft_cleanup(tok, consts, 1);
-		return ;
-	}
-	if (validation_result == 2 && check_numeric_argument(tok_current->cmd[1],
-			&exit_no) != 0)
+	if (tok_current->cmd[1] == NULL)
+		handle_exit(tok, consts, exit_no);
+	if (check_numeric_argument(tok_current->cmd[1], &exit_no))
 	{
 		ft_cleanup(tok, consts, 255);
 		return ;
 	}
-	handle_exit(tok, consts, exit_no);
+	else if (validate_exit_arguments(tok_current))
+	{
+		consts->exit_code = 1;
+		return ;
+	}
+	else
+		handle_exit(tok, consts, exit_no);
 }
