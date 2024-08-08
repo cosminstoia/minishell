@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:15:31 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/18 15:07:01 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/08 15:09:48 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,35 @@ void	ft_redir_file(t_token *tok, t_cnst *consts, char *tok_str, int index)
 			while (tok_str[i] != quote_symb)
 				i++;
 		}
-		if (tok_str[i] == '>' && tok_str[i + 1] == '>')
-		{
-			tok[index].out_a = ft_cpy_redir(tok, consts, &tok[index].out_a[0], &tok_str[i + 2]);
-			i++;
-		}
-		else if (tok_str[i] == '>')
-			tok[index].out = ft_cpy_redir(tok, consts, &tok[index].out[0], &tok_str[i + 1]);
-		else if (tok_str[i] == '<' && tok_str[i + 1] == '<')
-		{
-			tok[index].heredoc = ft_cpy_redir(tok, consts, &tok[index].heredoc[0], &tok_str[i + 2]);
-			i++;
-		}
-		else if (tok_str[i] == '<')
-			tok[index].in = ft_cpy_redir(tok, consts, &tok[index].in[0], &tok_str[i + 1]);
+		i = i + ft_fill_redirs(tok, consts, &tok_str[i], index);
 		i++;
 	}
+}
+
+int	ft_fill_redirs(t_token *tok, t_cnst *consts, char *tok_str, int index)
+{
+	int	i;
+
+	i = 0;
+	if (tok_str[i] == '>' && tok_str[i + 1] == '>')
+	{
+		tok[index].out_a = ft_cpy_redir(tok, consts, &tok[index].out_a[0],
+				&tok_str[i + 2]);
+		i++;
+	}
+	else if (tok_str[i] == '>')
+		tok[index].out = ft_cpy_redir(tok, consts, &tok[index].out[0],
+				&tok_str[i + 1]);
+	else if (tok_str[i] == '<' && tok_str[i + 1] == '<')
+	{
+		tok[index].heredoc = ft_cpy_redir(tok, consts, &tok[index].heredoc[0],
+				&tok_str[i + 2]);
+		i++;
+	}
+	else if (tok_str[i] == '<')
+		tok[index].in = ft_cpy_redir(tok, consts, &tok[index].in[0], &tok_str[i
+				+ 1]);
+	return (i);
 }
 
 char	*ft_cpy_redir(t_token *tok, t_cnst *consts, char *tok_str, char *str)

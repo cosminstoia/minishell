@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:27:39 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/18 16:05:11 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/08 12:51:45 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,44 +26,6 @@ t_token	*ft_parse_input(t_token *tok, t_cnst *consts)
 		ft_cleanup(tok, consts, errno);
 	tok = ft_make_toks(tok, consts, tok_str, consts->tok_num);
 	return (tok);
-}
-
-int	ft_check_quotes(char *input, int i)
-{
-	char	quote_symb;
-
-	quote_symb = input[i];
-	i++;
-	while (input[i] != '\0' && input[i] != quote_symb)
-		i++;
-	if (input[i] == quote_symb)
-		i++;
-	return (i);
-}
-
-// function that uses the input string to find the number of tokens required
-int	ft_token_num(char *input, int tok_num)
-{
-	int i;
-
-	i = 0;
-	while (input[i] == ' ' || input[i] == '\t')
-		i++;
-	if (input[i] != '\0')
-		tok_num++;
-	while (input[i] != '\0')
-	{
-		if (input[i] == '\'' || input[i] == '"')
-		{
-			i = ft_check_quotes(input, i);
-			i--;
-		}
-		else if (input[i] == '|' && input[i + 1] != '|')
-			tok_num++;
-		if (input[i] != '\0')
-			i++;
-	}
-	return (tok_num);
 }
 
 // function to initialise the structs' variables

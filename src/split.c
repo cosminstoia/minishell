@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:18:47 by gstronge          #+#    #+#             */
-/*   Updated: 2024/07/10 09:52:28 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/08 13:39:10 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,7 @@ char	**ft_split_ms(char *str, char c)
 	{
 		while (str[j] == c)
 			j++;
-		if (str[j] == '>' || str[j] == '<')
-		{
-			while (str[j] == '>' || str[j] == '<' || str[j] == ' ')
-				j++;
-			while (str[j] != '\0' && str[j] != ' ')
-				j++;
-			while (str[j] == c)
-				j++;
-		}
+		j = ft_skip_redir_split(str, j, c);
 		j = j + ft_copystr_ms(strstr, str + j, c, i);
 		if (strstr[i] == NULL)
 			return (NULL);
@@ -50,84 +42,27 @@ char	**ft_split_ms(char *str, char c)
 	return (strstr);
 }
 
-// function to move the index to the closing quote symbol when an opening
-// quote symbol is found in the input string
-int	ft_skip_quotes(char *str, int i)
+// function to skip redirects when splitting the string
+int	ft_skip_redir_split(char *str, int j, char c)
 {
-	if (str[i] == '\'')
+	if (str[j] == '>' || str[j] == '<')
 	{
-		i++;
-		while (str[i] != '\'' && str[i] != '\0')
-			i++;
+		while (str[j] == '>' || str[j] == '<' || str[j] == ' ')
+			j++;
+		while (str[j] != '\0' && str[j] != ' ' && str[j] != '\t')
+			j++;
+		while (str[j] == c)
+			j++;
 	}
-	if (str[i] == '"')
-	{
-		i++;
-		while (str[i] != '"' && str[i] != '\0')
-			i++;
-	}
-	if (str[i] != '\0')
-		i++;
-	return (i);
-}
-
-// function to move the index to the end of the filename when a redirection
-// symbol is found in the input string
-int	ft_skip_redir(char *str, int i)
-{
-	while (str[i] == '>' || str[i] == '<' || str[i] == ' ')
-		i++;
-	if (str[i] == '\'' || str[i] == '"')
-		i = ft_skip_quotes(str, i);
-	else
-	{
-		while (str[i] != '\0' && str[i] != ' ')
-			i++;
-	}
-	return(i);
-}
-
-// function to count the number of strings that should be included in the array
-int	ft_strnum_ms(char *str, char c, int strnum)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] == c)
-		i++;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '>' || str[i] == '<')
-			i = ft_skip_redir(str, i);
-		else if (str[i] == '\'' || str[i] == '"')
-		{
-			if (i == 0 || str[i - 1] == c)
-				strnum++;
-			i = ft_check_quotes(str, i);
-			while (str[i] != '\0' && str[i] != c && str[i] != '>' && str[i] != '<' && str[i] != '\'' && str[i] != '"')
-				i++;
-		}
-		else if (str[i] != c)
-		{
-			strnum++;
-			while (str[i] != '\0' && str[i] != c && str[i] != '>' && str[i] != '<' && str[i] != '\'' && str[i] != '"')
-				i++;
-		}
-		else if (str[i] != '\0')
-			i++;
-	}
-	return (strnum);
+	return (j);
 }
 
 // function to calculate how long the string should be
 int	ft_strlen_ms(char *str, char c, int len)
 {
 	char	quote_symb;
-	int 	i;
 
-	i = 0;
-
-	while (str[len] != '\0' && str[len] != c && str[len] != '|' )
+	while (str[len] != '\0' && str[len] != c && str[len] != '|')
 	{
 		if (str[len] == '\'' || str[len] == '"')
 		{
