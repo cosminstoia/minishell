@@ -6,8 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/08 14:31:09 by cstoia           ###   ########.fr       */
-/*   Updated: 2024/08/08 13:28:23 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/08 18:19:48 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +111,6 @@ void	ft_use_input(t_token *tok, t_cnst *consts)
 	add_history(consts->input);
 	if (!ft_input_error(consts, consts->input))
 	{
-		// if (!ft_strncmp("minishell", consts->input, 10))
-		// 	ft_new_shell();
 		tok = ft_parse_input(tok, consts);
 		ft_execute(tok, consts);
 		ft_free_tok(tok, consts);

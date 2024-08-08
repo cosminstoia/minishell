@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/08 14:44:16 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/08 18:31:29 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,19 +85,12 @@ int	ft_redirect(t_token *tok, t_cnst *consts, int out_fd)
 			return (-1);
 	}
 	if (tok->heredoc)
-	{
 		ft_handle_heredoc(tok, consts, in_fd);
-		flag = 1;
-	}
 	if (tok->out)
-	{
 		ft_handle_outfile(tok, consts, out_fd);
-		flag = 1;
-	}
 	if (tok->out_a)
-	{
 		ft_handle_append(tok, consts, out_fd);
+	if (tok->in || tok->heredoc || tok->out || tok->out_a)
 		flag = 1;
-	}
 	return (flag);
 }

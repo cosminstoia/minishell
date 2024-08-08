@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:15:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/06 18:05:31 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/08 18:29:01 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,10 @@ static void	ft_unlink(t_token *tok, t_cnst *consts)
 	}
 }
 
-void	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
+static void	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd)
 {
 	char	*input;
 
-	ft_handle_sig_heredoc();
-	in_fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (in_fd < 0)
-	{
-		perror(tok->in);
-		consts->exit_code = 1;
-	}
 	while (1)
 	{
 		input = readline("> ");
@@ -76,5 +69,17 @@ void	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
 		}
 		ft_write(in_fd, input);
 	}
+}
+
+void	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
+{
+	ft_handle_sig_heredoc();
+	in_fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (in_fd < 0)
+	{
+		perror(tok->in);
+		consts->exit_code = 1;
+	}
+	ft_heredoc_utils(tok, consts, in_fd);
 	ft_fd(tok, consts, in_fd);
 }
