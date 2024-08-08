@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/06 20:30:32 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:31:09 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ int	ft_input_error(t_cnst *consts, char *input)
 		err_char = ft_only_pipe(input, err_char);
 	if (err_char != 'x')
 	{
-		printf("minishell: syntax error near unexpected token '%c'\n", err_char);
+		printf("minishell: syntax error near unexpected token '%c'\n",
+			err_char);
 		consts->exit_code = 258;
 		return (1);
 	}
@@ -107,7 +108,8 @@ char	ft_no_redir_name(char *input, char err_char, int i)
 		return (input[i - 1]);
 	while (input[i] == ' ' || input[i] == '\t')
 		i++;
-	if (input[i] == '\0' || input[i] == '|' || input[i] == '<' || input[i] == '>')
+	if (input[i] == '\0' || input[i] == '|' || input[i] == '<'
+		|| input[i] == '>')
 		err_char = input[i];
 	return (err_char);
 }
@@ -130,7 +132,8 @@ char	ft_redir_error(char *input, char err_char)
 		}
 		if (input[i] == '<')
 		{
-			if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i + 2] == '>'))
+			if (input[i + 1] == '<' && (input[i + 2] == '<' || input[i
+					+ 2] == '>'))
 				err_char = input[i + 2];
 			else
 				err_char = ft_no_redir_name(input, err_char, i);
@@ -139,7 +142,8 @@ char	ft_redir_error(char *input, char err_char)
 		{
 			if (input[i + 1] == '<')
 				err_char = '<';
-			else if (input[i + 1] == '>' && (input[i + 2] == '<' || input[i + 2] == '>'))
+			else if (input[i + 1] == '>' && (input[i + 2] == '<' || input[i
+					+ 2] == '>'))
 				err_char = input[i + 2];
 			else
 				err_char = ft_no_redir_name(input, err_char, i);
@@ -238,6 +242,6 @@ t_cnst	*ft_make_consts(t_cnst *consts, char **env)
 	consts->env_p = ft_make_env_path(NULL, consts);
 	consts->input = NULL;
 	consts->tok_num = 0;
-	consts->exit_code = 0;//can this be moved to another fucntion? since it should set to 0 default
+	consts->exit_code = 0; // can this be moved to another fucntion? since it should set to 0 default
 	return (consts);
 }
