@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/08 18:31:44 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/09 12:34:16 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include <stdio.h>             //needed for the readline library
 # include <errno.h> //needed for error numbers/messages
 # include <fcntl.h> //needed for open/read/write
 # include <limits.h>
 # include <readline/history.h>  //needed for history function
 # include <readline/readline.h> //needed for readline function
 # include <signal.h>            //needed for signals
-# include <stdio.h>             //needed for the readline library
 # include <stdlib.h>            //needed for malloc/free functions
 # include <sys/wait.h>          //needed for wait functions
 # include <termios.h>
