@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:49:14 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:06:25 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:45:33 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ static void	execute_builtin_command(t_token *tok, t_cnst *consts, int index,
 static void	execute_non_builtin(t_token *tok, t_cnst *consts, int index,
 		int *pipefd)
 {
+	tok[index].cmd = ft_expand_dollar(tok, consts, &tok[index]);
+	tok[index].cmd = ft_remove_quotes(tok[index].cmd);
 	tok[index].path = ft_make_path(tok, consts, index);
 	if (tok[index].path)
 	{

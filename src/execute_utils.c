@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:09:10 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:45:26 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	ft_wait(t_token *tok, t_cnst *consts)
 
 void	ft_execute_child(t_token *tok, t_cnst *consts, int index)
 {
-	tok[index].cmd = ft_expand_dollar(tok, consts, &tok[index]);
-	tok[index].cmd = ft_remove_quotes(tok[index].cmd);
 	if (!tok[index].path)
 		exit(EXIT_FAILURE);
 	if (execve(tok[index].path, tok[index].cmd, consts->environ) == -1)
