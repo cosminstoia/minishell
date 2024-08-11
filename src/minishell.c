@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/11 18:08:33 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:41:38 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ void	ft_use_input(t_token *tok, t_cnst *consts)
 	{
 		tok = ft_parse_input(tok, consts);
 		ft_execute(tok, consts);
+		if (consts->tok_num == 0)
+			consts->exit_code = 0;
 		ft_free_tok(tok, consts);
 	}
 }
