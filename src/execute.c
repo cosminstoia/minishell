@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:49:14 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 16:43:06 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/11 18:06:25 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,19 @@ static void	execute_non_builtin(t_token *tok, t_cnst *consts, int index,
 		int *pipefd)
 {
 	tok[index].path = ft_make_path(tok, consts, index);
-	tok[index].pid = fork();
-	if (tok[index].pid == 0)
+	if (tok[index].path)
 	{
-		if (ft_redirect(&tok[index], consts, pipefd, index))
+		tok[index].pid = fork();
+		if (tok[index].pid == 0)
 		{
-			close(pipefd[0]);
-			close(pipefd[1]);
-			ft_execute_child(tok, consts, index);
+			if (ft_redirect(&tok[index], consts, pipefd, index))
+			{
+				close(pipefd[0]);
+				close(pipefd[1]);
+				ft_execute_child(tok, consts, index);
+			}
+			exit(EXIT_SUCCESS);
 		}
-		exit(EXIT_SUCCESS);
 	}
 }
 
@@ -67,10 +70,7 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 	{
 		setup_pipes_and_handle_errors(pipefd, index, consts);
 		if (tok[index].cmd[0] == NULL)
-		{
 			ft_handle_red_no_arg(tok, consts, index);
-			return ;
-		}
 		else if (ft_is_builtin(tok[index].cmd[0]))
 			execute_builtin_command(tok, consts, index, pipefd);
 		else
@@ -79,8 +79,9 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 			close(tok[index].input_fd);
 		if (index < consts->tok_num - 1)
 			tok[index + 1].input_fd = pipefd[0];
+		else
+			close(pipefd[0]);
 		close(pipefd[1]);
-		close(pipefd[0]);
 		index++;
 	}
 	ft_wait(tok, consts);

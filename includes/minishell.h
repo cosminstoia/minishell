@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/11 16:31:51 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/11 18:16:13 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "../libft/libft.h"
 # include <stdio.h>             //needed for the readline library
-
 # include <errno.h> 			//needed for error numbers/messages
 # include <fcntl.h> 			//needed for open/read/write
 # include <limits.h>
@@ -38,7 +37,6 @@ typedef struct s_token
 	char	*out_a;
 	char	*heredoc;
 	int		input_fd;
-	int		exit_code;
 	pid_t	pid;
 }			t_token;
 
@@ -165,8 +163,13 @@ char		*ft_make_path(t_token *tok, t_cnst *consts, int index);
 char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
 void		ft_cmd_not_fnd(t_token *tok, t_cnst *consts, int index);
 
-/* redirections.c: function to handle the redirections */
+/* redirections_utils.c: function to handle the redirections */
+int			ft_handle_infile(t_token *tok, t_cnst *consts, int in_fd);
 int			ft_redirect(t_token *tok, t_cnst *consts, int *pipefd, int index);
+int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd);
+
+/* redirections.c: function to handle the redirections */
+int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd);
 
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);
