@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/11 18:16:13 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:26:36 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void		ft_execute_builtins(t_token *tok, t_cnst *consts, int index,
 int			ft_is_builtin(char *cmd);
 
 /* builtins.c: functions to handle the builtin functions */
-void		ft_execute_echo(t_token *tok, int output_fd);
+void		ft_execute_echo(t_token *tok, t_cnst *consts, int output_fd);
 void		ft_execute_cd(t_token *tok, t_cnst *consts);
 void		ft_execute_pwd(t_cnst *consts, int output_fd);
 void		ft_execute_env(t_cnst *consts, int output_fd);

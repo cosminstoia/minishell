@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:29:33 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/06 18:01:42 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:27:54 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,5 @@ void	ft_execute_unset(t_token *tok, t_cnst *consts)
 	var = tok->cmd[1];
 	remove_env_var(var, consts->environ);
 	handle_special_cases(var, consts);
+	consts->exit_code = 0;
 }

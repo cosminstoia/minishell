@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/30 14:40:25 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:27:39 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,5 @@ void	ft_execute_export(t_token *tok, t_cnst *consts)
 	var_name = tok->cmd[1];
 	value = equal_sign + 1;
 	ft_add_or_update_var(tok, consts, var_name, value);
+	consts->exit_code = 0;
 }
