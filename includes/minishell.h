@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/09 12:34:16 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/11 16:31:51 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 # include "../libft/libft.h"
 # include <stdio.h>             //needed for the readline library
-# include <errno.h> //needed for error numbers/messages
-# include <fcntl.h> //needed for open/read/write
+
+# include <errno.h> 			//needed for error numbers/messages
+# include <fcntl.h> 			//needed for open/read/write
 # include <limits.h>
 # include <readline/history.h>  //needed for history function
 # include <readline/readline.h> //needed for readline function
@@ -74,10 +75,7 @@ void		ft_cleanup(t_token *tok, t_cnst *consts, int exit_no);
 
 /* execute_utils.c: function to handle the execution */
 void		ft_wait(t_token *tok, t_cnst *consts);
-void		ft_execute_child(t_token *tok, t_cnst *consts, int index,
-				int pipefd[2]);
-void		ft_execute_parent(t_token *tok, int index, int pipefd[2],
-				t_cnst *consts);
+void		ft_execute_child(t_token *tok, t_cnst *consts, int index);
 void		ft_handle_red_no_arg(t_token *tok, t_cnst *consts, int index);
 
 /* execute.c: function to handle the execution */
@@ -139,7 +137,7 @@ char		ft_redir_error(char *input, char err_char);
 char		ft_only_pipe(char *input, char err_char);
 
 /* heredoc.c */
-void		ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd);
+int			ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd);
 
 /* minishell.c : */
 t_cnst		*ft_make_consts(t_cnst *consts, char **env);
@@ -168,7 +166,7 @@ char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
 void		ft_cmd_not_fnd(t_token *tok, t_cnst *consts, int index);
 
 /* redirections.c: function to handle the redirections */
-int			ft_redirect(t_token *tok, t_cnst *consts, int out_fd);
+int			ft_redirect(t_token *tok, t_cnst *consts, int *pipefd, int index);
 
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);

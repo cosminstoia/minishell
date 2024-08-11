@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:15:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/08 18:29:01 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/09 19:20:50 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,18 @@ static void	ft_unlink(t_token *tok, t_cnst *consts)
 	}
 }
 
-static void	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd)
+int	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
 {
 	char	*input;
 
+	ft_handle_sig_heredoc();
+	in_fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (in_fd < 0)
+	{
+		perror(tok->in);
+		consts->exit_code = 1;
+		return (0);
+	}
 	while (1)
 	{
 		input = readline("> ");
@@ -59,27 +67,16 @@ static void	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd)
 		{
 			g_got_sig = 0;
 			ft_unlink(tok, consts);
-			return ;
+			return (1);
 		}
 		if (!input || (!ft_strncmp(input, tok->heredoc,
 					ft_strlen(tok->heredoc))))
 		{
 			ft_unlink(tok, consts);
-			return ;
+			return (1);
 		}
 		ft_write(in_fd, input);
 	}
-}
-
-void	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
-{
-	ft_handle_sig_heredoc();
-	in_fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (in_fd < 0)
-	{
-		perror(tok->in);
-		consts->exit_code = 1;
-	}
-	ft_heredoc_utils(tok, consts, in_fd);
 	ft_fd(tok, consts, in_fd);
+	return (1);
 }
