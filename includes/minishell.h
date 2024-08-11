@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
 /*   Updated: 2024/08/11 16:31:51 by gstronge         ###   ########.fr       */
@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include <stdio.h>             //needed for the readline library
+
 # include <errno.h> 			//needed for error numbers/messages
 # include <fcntl.h> 			//needed for open/read/write
 # include <limits.h>

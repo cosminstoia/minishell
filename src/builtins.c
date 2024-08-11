@@ -3,11 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/08 15:35:05 by cstoia           ###   ########.fr       */
-/*   Updated: 2024/08/08 11:29:13 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/08 18:29:59 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +51,7 @@ void	ft_execute_cd(t_token *tok, t_cnst *consts)
 	{
 		target_directory = ft_return_env_var(consts, "OLDPWD=");
 		if (target_directory == NULL)
-		{
-			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
-			return;
-		}
+			return (ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO));
 		else
 			printf("%s\n", target_directory);
 	}
