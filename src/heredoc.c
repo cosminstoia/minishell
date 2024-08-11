@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:15:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/06 18:05:31 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/09 19:20:50 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	ft_unlink(t_token *tok, t_cnst *consts)
 	}
 }
 
-void	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
+int	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
 {
 	char	*input;
 
@@ -58,6 +58,7 @@ void	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
 	{
 		perror(tok->in);
 		consts->exit_code = 1;
+		return (0);
 	}
 	while (1)
 	{
@@ -66,15 +67,16 @@ void	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
 		{
 			g_got_sig = 0;
 			ft_unlink(tok, consts);
-			return ;
+			return (1);
 		}
 		if (!input || (!ft_strncmp(input, tok->heredoc,
 					ft_strlen(tok->heredoc))))
 		{
 			ft_unlink(tok, consts);
-			return ;
+			return (1);
 		}
 		ft_write(in_fd, input);
 	}
 	ft_fd(tok, consts, in_fd);
+	return (1);
 }

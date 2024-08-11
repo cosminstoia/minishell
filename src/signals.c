@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:59:52 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/02 16:07:51 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/09 15:55:31 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	ft_handle_sigquit(int signum)
 	tcgetattr(STDIN_FILENO, &term);
 	if ((term.c_lflag & ICANON))
 	{
-		write(1, "Quit: 3\n", 10);
+		write(1, "Quit: 3\n", 8);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 	}
