@@ -42,7 +42,8 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/expand_dollar.c \
 				$(SRC_DIR)/expand_quotes_exit_code.c \
 				$(SRC_DIR)/input_error.c \
-				$(SRC_DIR)/redirections_utils.c
+				$(SRC_DIR)/redirections_utils.c \
+				$(SRC_DIR)/cd.c \
 
 # Objects
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
