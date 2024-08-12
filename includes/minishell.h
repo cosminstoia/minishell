@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/12 13:01:10 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/12 20:28:32 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void		ft_free_const(t_cnst *consts);
 void		ft_cleanup(t_token *tok, t_cnst *consts, int exit_no);
 
 /* execute_utils.c: function to handle the execution */
+void		ft_unlink(t_token *tok, t_cnst *consts, int index);
 void		ft_wait(t_token *tok, t_cnst *consts);
 void		ft_execute_child(t_token *tok, t_cnst *consts, int index);
 void		ft_handle_red_no_arg(t_token *tok, t_cnst *consts, int index);
@@ -136,7 +137,7 @@ char		ft_redir_error(char *input, char err_char);
 char		ft_only_pipe(char *input, char err_char);
 
 /* heredoc.c */
-int			ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd);
+int			ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd, int index);
 
 /* minishell.c : */
 t_cnst		*ft_make_consts(t_cnst *consts, char **env);

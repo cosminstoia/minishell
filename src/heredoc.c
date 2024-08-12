@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:15:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:11:40 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/12 20:28:01 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,19 @@ static void	ft_write(int in_fd, char *input)
 	write(in_fd, "\n", 1);
 }
 
-static void	ft_fd(t_token *tok, t_cnst *consts, int in_fd)
+static void	ft_fd(t_token *tok, t_cnst *consts, int in_fd, int index)
 {
 	if (dup2(in_fd, STDIN_FILENO) < 0)
 	{
-		perror(tok->in);
+		perror(tok[index].heredoc);
 		consts->exit_code = 1;
-		close(in_fd);
+		// close(in_fd);
 	}
-	close(in_fd);
-	if (unlink("heredoc") < 0)
-	{
-		perror(tok->in);
-		consts->exit_code = 1;
-	}
+	// close(in_fd);
 	g_got_sig = 0;
 }
 
-static void	ft_unlink(t_token *tok, t_cnst *consts)
-{
-	if (unlink("heredoc") < 0)
-	{
-		perror(tok->in);
-		consts->exit_code = 1;
-	}
-}
-
-static int	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd)
+static int	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd, int index)
 {
 	char	*input;
 
@@ -58,30 +44,59 @@ static int	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd)
 		if (g_got_sig)
 		{
 			g_got_sig = 0;
-			ft_unlink(tok, consts);
+			ft_unlink(tok, consts, index);
 			return (1);
 		}
-		if (!input || (!ft_strncmp(input, tok->heredoc,
-					ft_strlen(tok->heredoc))))
+		if (!input || (!ft_strncmp(input, tok[index].heredoc,
+					ft_strlen(tok[index].heredoc))))
 		{
-			ft_unlink(tok, consts);
+			// ft_unlink(tok, consts, index);
 			return (1);
 		}
 		ft_write(in_fd, input);
 	}
 }
 
-int	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd)
+static char	**ft_heredoc_cmd(t_token *tok, t_cnst *consts, int index)
 {
+	char	**new_cmd;
+	int		cmd_no;
+
+	cmd_no = 0;
+	while (tok[index].cmd[cmd_no])
+		cmd_no++;
+	new_cmd = (char **)malloc((cmd_no + 2) * sizeof(char *));
+	if (new_cmd == NULL)
+		ft_cleanup(tok, consts, errno);
+	cmd_no = 0;
+	while (tok[index].cmd[cmd_no])
+	{
+		new_cmd[cmd_no] = tok[index].cmd[cmd_no];
+		cmd_no++;
+	}
+	new_cmd[cmd_no] = ft_strdup("heredoc");
+	new_cmd[cmd_no + 1] = NULL;
+	free(tok[index].cmd);
+	return (new_cmd);
+}
+
+int	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd, int index)
+{
+	int	saved_stdin;
+
+	saved_stdin = dup(STDIN_FILENO);
 	ft_handle_sig_heredoc();
 	in_fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (in_fd < 0)
 	{
-		perror(tok->in);
+		perror(tok[index].heredoc);
 		consts->exit_code = 1;
 		return (0);
 	}
-	ft_heredoc_utils(tok, consts, in_fd);
-	ft_fd(tok, consts, in_fd);
+	ft_heredoc_utils(tok, consts, in_fd, index);
+	ft_fd(tok, consts, in_fd, index);
+	if (tok[index].cmd[0] && (!ft_strncmp("cat", tok[index].cmd[0], 4) || !ft_strncmp("grep", tok[index].cmd[0], 5)))
+		tok[index].cmd = ft_heredoc_cmd(tok, consts, index);
+	dup2(saved_stdin, STDIN_FILENO);
 	return (1);
 }

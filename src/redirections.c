@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:16:41 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/12 17:26:11 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts,
 	}
 	if (tok->heredoc)
 	{
-		if (ft_handle_heredoc(tok, consts, pipefd[0]))
+		if (ft_handle_heredoc(tok, consts, pipefd[0], index))
 			inflag = 1;
 		else
 			return (0);
