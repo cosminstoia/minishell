@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 18:29:13 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/08 12:44:32 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/12 14:05:09 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,11 @@ char	*ft_make_path(t_token *tok, t_cnst *consts, int index)
 	int	sub_index;
 
 	sub_index = 0;
+	if (tok[index].cmd[0][0] == '\0')
+	{
+		ft_cmd_not_fnd(tok, consts, index);
+		return (NULL);
+	}
 	tok[index].path = ft_path_access(tok, consts, &sub_index, index);
 	if (sub_index == -1)
 		ft_cleanup(tok, consts, errno);
