@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/12 13:00:17 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:46:51 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,36 +39,6 @@ void	ft_execute_echo(t_token *tok, t_cnst *consts, int output_fd)
 	}
 	if (newline)
 		write(output_fd, "\n", 1);
-	consts->exit_code = 0;
-}
-
-// Function to execute the "cd" command in the parent process
-void	ft_execute_cd(t_token *tok, t_cnst *consts)
-{
-	char	*target_directory;
-
-	target_directory = NULL;
-	if (tok->cmd[1] != NULL && ft_strncmp(tok->cmd[1], "-", 2) == 0)
-	{
-		target_directory = ft_return_env_var(consts, "OLDPWD=");
-		if (target_directory == NULL)
-			return (ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO));
-		else
-			printf("%s\n", target_directory);
-	}
-	else if (tok->cmd[1] == NULL || ft_strncmp(tok->cmd[1], "~", 2) == 0)
-	{
-		target_directory = getenv("HOME");
-		if (target_directory == NULL)
-			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
-	}
-	else
-		target_directory = tok->cmd[1];
-	if (chdir(target_directory) != 0)
-	{
-		perror("cd");
-		consts->exit_code = 1;
-	}
 	consts->exit_code = 0;
 }
 
