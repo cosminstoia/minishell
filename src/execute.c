@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:49:14 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:45:33 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/12 20:02:10 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	execute_non_builtin(t_token *tok, t_cnst *consts, int index,
 				close(pipefd[1]);
 				ft_execute_child(tok, consts, index);
 			}
-			exit(EXIT_SUCCESS);
+			// exit(EXIT_SUCCESS);
 		}
 	}
 }
