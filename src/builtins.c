@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:22:15 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:27:19 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/12 13:00:17 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	ft_execute_echo(t_token *tok, t_cnst *consts, int output_fd)
 	if (newline)
 		write(output_fd, "\n", 1);
 	consts->exit_code = 0;
-	
 }
 
 // Function to execute the "cd" command in the parent process

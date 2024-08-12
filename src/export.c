@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:29:47 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:27:39 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/12 12:49:59 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,24 +45,26 @@ static void	ft_add_or_update_var(t_token *tok, t_cnst *consts, char *var_name,
 }
 
 // Function to execute the "export" command
-void	ft_execute_export(t_token *tok, t_cnst *consts)
+void	ft_execute_export(t_token *tok, t_token *tok_current, t_cnst *consts)
 {
 	char	*equal_sign;
 	char	*var_name;
 	char	*value;
 
-	if (!ft_check_argument(tok, consts))
+	if (!ft_check_argument(tok_current, consts))
 		return ;
-	consts->environ = ft_realloc_env(tok, consts);
-	equal_sign = ft_strchr(tok->cmd[1], '=');
+	consts->environ = ft_realloc_env(tok_current, consts);
+	equal_sign = ft_strchr(tok_current->cmd[1], '=');
 	if (equal_sign == NULL)
 	{
-		ft_handle_no_equal_sign(tok, consts);
+		ft_handle_no_equal_sign(tok_current, consts);
 		return ;
 	}
 	*equal_sign = '\0';
-	var_name = tok->cmd[1];
+	var_name = tok_current->cmd[1];
 	value = equal_sign + 1;
-	ft_add_or_update_var(tok, consts, var_name, value);
+	ft_add_or_update_var(tok_current, consts, var_name, value);
+	if (ft_strncmp(tok_current->cmd[1], "PATH", 4) == 0)
+		consts->env_p = ft_make_env_path(tok, consts);
 	consts->exit_code = 0;
 }

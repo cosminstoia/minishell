@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/11 18:26:36 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/12 13:01:10 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ void		ft_add_var(t_cnst *consts, char *new_var, int i);
 char		**ft_realloc_env(t_token *tok, t_cnst *consts);
 
 /* export.c: function to handle the export utility functions */
-void		ft_execute_export(t_token *tok, t_cnst *consts);
+void		ft_execute_export(t_token *tok, t_token *tok_current,
+				t_cnst *consts);
 
 /* fill_tokens.c: functions to fill the tok struct with the data from input */
 t_token		*ft_fill_tok(t_token *tok, t_cnst *consts, char *tok_str,

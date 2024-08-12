@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:29:33 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/11 18:27:54 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/12 12:34:20 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void	remove_env_var(char *var, char **environ)
 // Function to handle special cases such as PATH
 static void	handle_special_cases(char *var, t_cnst *consts)
 {
-	if (ft_strncmp(var, "PATH=", 5) == 0)
+	if (ft_strncmp(var, "PATH", 4) == 0)
 	{
 		ft_free_splits(consts->env_p);
 		consts->env_p = NULL;
