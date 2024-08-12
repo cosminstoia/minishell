@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:59:52 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/09 15:55:31 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/12 23:01:13 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@ void	ft_handle_sig(void)
 
 static void	ft_handle_sigint_heredoc(int signum)
 {
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 	if (signum == SIGINT)
 		g_got_sig = 1;
 }
