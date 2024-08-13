@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/12 20:28:32 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/13 19:15:37 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ typedef struct s_token
 {
 	char	**cmd;
 	char	*path;
-	char	*in;
-	char	*out;
-	char	*out_a;
-	char	*heredoc;
+	char	**in;
+	char	**out;
+	char	**out_a;
+	char	**heredoc;
 	int		input_fd;
 	pid_t	pid;
 }			t_token;
@@ -118,10 +118,8 @@ t_token		*ft_fill_tok(t_token *tok, t_cnst *consts, char *tok_str,
 				int index);
 void		ft_redir_file(t_token *tok, t_cnst *consts, char *tok_str,
 				int index);
-int			ft_fill_redirs(t_token *tok, t_cnst *consts, char *tok_str,
-				int index);
-char		*ft_cpy_redir(t_token *tok, t_cnst *consts, char *tok_str,
-				char *str);
+int			ft_fill_redirs(t_token *tok, char *tok_str, int index);
+char		**ft_cpy_redir(char **old_strstr, char *str);
 
 /* final_cmd.c functions to finalise the cmd strings before execution */
 int			ft_strlen_cmd(t_cnst *consts, char *cmd_str, int index,
@@ -139,7 +137,8 @@ char		ft_redir_error(char *input, char err_char);
 char		ft_only_pipe(char *input, char err_char);
 
 /* heredoc.c */
-int			ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd, int index);
+int			ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd,
+				int index);
 
 /* minishell.c : */
 t_cnst		*ft_make_consts(t_cnst *consts, char **env);
@@ -197,5 +196,10 @@ int			ft_token_num(char *input, int tok_num);
 
 /* unset.c functions to execute the unset function */
 void		ft_execute_unset(t_token *tok, t_cnst *consts);
+
+/* copy_redir_names.c: functions to copy the names of redirects into the relevant 2D array */
+char		**ft_cpy_redir(char **old_strstr, char *str);
+int			ft_redirnum(char **old_strstr, int redir_no);
+char		**ft_new_redir_str(char **new_strstr, char *str, int redir_no);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:15:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/12 22:59:37 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/13 19:22:29 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	ft_fd(t_token *tok, t_cnst *consts, int in_fd, int index)
 {
 	if (dup2(in_fd, STDIN_FILENO) < 0)
 	{
-		perror(tok[index].heredoc);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror(tok[index].heredoc[0]);
 		consts->exit_code = 1;
 		// close(in_fd);
 	}
@@ -37,7 +38,8 @@ static void	ft_fd(t_token *tok, t_cnst *consts, int in_fd, int index)
 static int	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd, int index)
 {
 	char	*input;
-	(void)consts;
+
+	(void)consts;//I assume this needs to be removed if we aren't using it??????????????????????????????????????????????????????
 	while (1)
 	{
 		input = readline("> ");
@@ -48,8 +50,8 @@ static int	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd, int index)
 		// 	ft_unlink(tok, consts, index);
 		// 	return (0);
 		// }
-		if (!input || (!ft_strncmp(input, tok[index].heredoc,
-					ft_strlen(tok[index].heredoc))))
+		if (!input || (!ft_strncmp(input, tok[index].heredoc[0],
+					ft_strlen(tok[index].heredoc[0]))))
 		{
 			// ft_unlink(tok, consts, index);
 			return (1);
@@ -89,7 +91,8 @@ int	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd, int index)
 	in_fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (in_fd < 0)
 	{
-		perror(tok[index].heredoc);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror(tok[index].heredoc[0]);
 		consts->exit_code = 1;
 		return (0);
 	}
