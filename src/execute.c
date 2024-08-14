@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:49:14 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/12 20:02:10 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/14 19:25:00 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 	index = 0;
 	while (index < consts->tok_num)
 	{
+		update_shlvl(consts, *tok[index].cmd);
 		setup_pipes_and_handle_errors(pipefd, index, consts);
 		if (tok[index].cmd[0] == NULL)
 			ft_handle_red_no_arg(tok, consts, index);

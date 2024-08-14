@@ -44,6 +44,7 @@ SRCS        = 	$(SRC_DIR)/minishell.c \
 				$(SRC_DIR)/input_error.c \
 				$(SRC_DIR)/redirections_utils.c \
 				$(SRC_DIR)/cd.c \
+				$(SRC_DIR)/shlvl.c 
 
 # Objects
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
