@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/13 19:15:37 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/14 19:26:16 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,9 @@ int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd);
 
 /* redirections.c: function to handle the redirections */
 int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd);
+
+/* shlvl.c: function to handle the shell level */
+void		update_shlvl(t_cnst *cnst, char *input);
 
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);
