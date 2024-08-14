@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 19:05:13 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/12 20:27:52 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/13 19:09:24 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_unlink(t_token *tok, t_cnst *consts, int index)
 {
 	if (unlink("heredoc") < 0)
 	{
-		perror(tok[index].heredoc);
+		perror(tok[index].heredoc[0]);
 		consts->exit_code = 0;
 	}
 }
@@ -56,23 +56,57 @@ void	ft_execute_child(t_token *tok, t_cnst *consts, int index)
 void	ft_handle_red_no_arg(t_token *tok, t_cnst *consts, int index)
 {
 	int	fd;
+	int	i;
 
-	fd = 0;
+	i = 0;
 	if (tok->out != NULL)
-		fd = open(tok->out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (tok->out_a != NULL)
-		fd = open(tok->out_a, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (tok->heredoc != NULL)
-		ft_handle_heredoc(tok, consts, fd, index);
-	if (tok->in != NULL)
 	{
-		fd = open(tok->in, O_RDONLY, 0644);
-		if (fd < 0)
+		while (tok->out[i])
 		{
-			printf("minishell: %s: No such file or directory\n",
-				tok[index].in);
+			fd = open(tok->out[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd < 0)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				perror(tok->out[i]);
+				consts->exit_code = 1;
+				return ;
+			}
+			i++;
 		}
 	}
-	if (fd < 0)
-		consts->exit_code = 1;
+	i = 0;
+	if (tok->out_a != NULL)
+	{
+		while (tok->out_a[i])
+		{
+			fd = open(tok->out_a[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (fd < 0)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				perror(tok->out_a[0]);
+				consts->exit_code = 1;
+				return ;
+			}
+			i++;
+		}
+	}
+	i = 0;
+	fd = 0;
+	if (tok->in != NULL)
+	{
+		while (tok->in[i])
+		{
+			fd = open(tok->in[i], O_RDONLY, 0644);
+			if (fd < 0)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				perror(tok->in[i]);
+				consts->exit_code = 1;
+				return ;
+			}
+			i++;
+		}
+	}
+	if (tok->heredoc != NULL)
+		ft_handle_heredoc(tok, consts, fd, index);
 }
