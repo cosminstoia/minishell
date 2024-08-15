@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/15 16:44:44 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 19:50:13 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts, int *pipefd
 	int	inflag;
 
 	inflag = 0;
-	if (tok->in)
+	if (tok[index].in)
 	{
 		if (ft_handle_infile(tok, consts, pipefd[0], index))
 			inflag = 1;
 		else
 			return (0);
 	}
-	if (tok->heredoc)
+	if (tok[index].heredoc)
 	{
 		if (ft_handle_heredoc(tok, consts, pipefd[0], index))
 			inflag = 1;

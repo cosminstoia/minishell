@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:15:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/13 19:22:29 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 19:55:42 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ static void	ft_fd(t_token *tok, t_cnst *consts, int in_fd, int index)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		perror(tok[index].heredoc[0]);
 		consts->exit_code = 1;
-		// close(in_fd);
 	}
-	// close(in_fd);
 	g_got_sig = 0;
 }
 
@@ -44,18 +42,9 @@ static int	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd, int index)
 	{
 		input = readline("> ");
 		ft_handle_sig_heredoc();
-		// if (g_got_sig)
-		// {
-		// 	g_got_sig = 0;
-		// 	ft_unlink(tok, consts, index);
-		// 	return (0);
-		// }
 		if (!input || (!ft_strncmp(input, tok[index].heredoc[0],
 					ft_strlen(tok[index].heredoc[0]))))
-		{
-			// ft_unlink(tok, consts, index);
 			return (1);
-		}
 		ft_write(in_fd, input);
 	}
 }
@@ -98,7 +87,7 @@ int	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd, int index)
 	}
 	ft_heredoc_utils(tok, consts, in_fd, index);
 	ft_fd(tok, consts, in_fd, index);
-	if (tok[index].cmd[0] && (!ft_strncmp("cat", tok[index].cmd[0], 4) || !ft_strncmp("grep", tok[index].cmd[0], 5)))
+	if (tok[index].cmd && (!ft_strncmp("cat", tok[index].cmd[0], 4) || !ft_strncmp("grep", tok[index].cmd[0], 5) || !ft_strncmp("awk", tok[index].cmd[0], 4)))
 		tok[index].cmd = ft_heredoc_cmd(tok, consts, index);
 	dup2(saved_stdin, STDIN_FILENO);
 	return (1);
