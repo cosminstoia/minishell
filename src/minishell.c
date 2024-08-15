@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:20:57 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/12 15:23:35 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:51:50 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	main(int argc, char **argv, char **env)
 		exit(EXIT_FAILURE);
 	consts = ft_make_consts(consts, env);
 	ft_handle_sig();
+	update_shlvl(consts);
 	while (1)
 	{
 		consts->input = readline("minishell: ");
