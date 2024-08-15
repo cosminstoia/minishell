@@ -6,21 +6,20 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/12 17:26:11 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 16:44:44 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts,
-		int *pipefd, int index)
+static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts, int *pipefd, int index)
 {
 	int	inflag;
 
 	inflag = 0;
 	if (tok->in)
 	{
-		if (ft_handle_infile(tok, consts, pipefd[0]))
+		if (ft_handle_infile(tok, consts, pipefd[0], index))
 			inflag = 1;
 		else
 			return (0);
@@ -33,29 +32,25 @@ static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts,
 			return (0);
 	}
 	if (!inflag && index > 0)
-	{
-		dup2(tok->input_fd, STDIN_FILENO);
-		close(tok->input_fd);
-	}
+		dup2(tok[index].input_fd, STDIN_FILENO);
 	return (1);
 }
 
-static int	ft_handle_output_redirection(t_token *tok, t_cnst *consts,
-		int *pipefd, int index)
+static int	ft_handle_output_redirection(t_token *tok, t_cnst *consts, int *pipefd, int index)
 {
 	int	outflag;
 
 	outflag = 0;
-	if (tok->out)
+	if (tok[index].out)
 	{
-		if (ft_handle_outfile(tok, consts, pipefd[1]))
+		if (ft_handle_outfile(tok, consts, pipefd[1], index))
 			outflag = 1;
 		else
 			return (0);
 	}
 	if (tok->out_a)
 	{
-		if (ft_handle_append(tok, consts, pipefd[1]))
+		if (ft_handle_append(tok, consts, pipefd[1], index))
 			outflag = 1;
 		else
 			return (0);

@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 10:41:33 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/06 17:25:11 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/14 12:13:04 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ void	ft_free_tok(t_token *tok, t_cnst *consts)
 		if (tok[index].path)
 			free(tok[index].path);
 		if (tok[index].in)
-			free(tok[index].in);
+			ft_free_splits(tok[index].in);
 		if (tok[index].out)
-			free(tok[index].out);
+			ft_free_splits(tok[index].out);
 		if (tok[index].out_a)
-			free(tok[index].out_a);
+			ft_free_splits(tok[index].out_a);
 		if (tok[index].heredoc)
-			free(tok[index].heredoc);
+			ft_free_splits(tok[index].heredoc);
 		index++;
 	}
 	if (tok)

@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 12:44:49 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/13 18:25:29 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/14 13:50:39 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 
 	error = ft_strcpy_ms(tok[index].cmd[0], &tok[index].path);
 	if (error == -1)
-	{
 		ft_cleanup(tok, consts, errno);
-	}
 	if (!ft_strchr(tok[index].cmd[0], '/') || access(tok[index].cmd[0],
 			F_OK | X_OK) == -1)
 	{
@@ -38,6 +36,7 @@ char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 			perror(tok[index].cmd[0]);
 			consts->exit_code = 1;
 		}
+		free(tok[index].path);
 		return (NULL);
 	}
 	return (tok[index].path);
