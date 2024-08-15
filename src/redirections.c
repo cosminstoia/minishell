@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/15 20:24:51 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/15 21:43:21 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts,
 		else
 			return (0);
 	}
-	if (!inflag && index > 0)
+	if (!inflag && index > 0 && tok[index].cmd != NULL)
 		dup2(tok[index].input_fd, STDIN_FILENO);
 	return (1);
 }
@@ -50,7 +50,7 @@ static int	ft_handle_output_redirection(t_token *tok, t_cnst *consts,
 		else
 			return (0);
 	}
-	if (tok->out_a)
+	if (tok[index].out_a)
 	{
 		if (ft_handle_append(tok, consts, pipefd[1], index))
 			outflag = 1;

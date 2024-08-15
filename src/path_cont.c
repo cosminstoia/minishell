@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 12:44:49 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/14 13:50:39 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 21:43:56 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ char	*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index)
 	if (!ft_strchr(tok[index].cmd[0], '/') || access(tok[index].cmd[0],
 			F_OK | X_OK) == -1)
 	{
+		if (errno == 0)
+			(errno = ENOENT);
 		if (errno == ENOENT)
 			ft_cmd_not_fnd(tok, consts, index);
 		else if (errno == EACCES)
