@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/15 10:48:56 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:55:15 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,12 +167,12 @@ char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
 void		ft_cmd_not_fnd(t_token *tok, t_cnst *consts, int index);
 
 /* redirections_utils.c: function to handle the redirections */
-int			ft_handle_infile(t_token *tok, t_cnst *consts, int in_fd);
+int			ft_handle_infile(t_token *tok, t_cnst *consts, int in_fd, int index);
 int			ft_redirect(t_token *tok, t_cnst *consts, int *pipefd, int index);
-int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd);
+int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd, int index);
 
 /* redirections.c: function to handle the redirections */
-int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd);
+int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd, int index);
 
 /* shlvl.c: function to handle the shell level */
 void		update_shlvl(t_cnst *cnst);

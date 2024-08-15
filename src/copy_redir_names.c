@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 18:55:25 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/13 18:57:34 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:15:51 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ char	**ft_cpy_redir(char **old_strstr, char *str)
 /* function to count the number of redirects that have already been coppied */
 int	ft_redirnum(char **old_strstr, int redir_no)
 {
-	
 	if (old_strstr)
 	{		
 		while (old_strstr[redir_no])
@@ -57,6 +56,7 @@ char	**ft_new_redir_str(char **new_strstr, char *str, int redir_no)
 {
 	int		strlen;
 	int		i;
+	int		j;
 
 	strlen = 0;
 	i = 0;
@@ -70,12 +70,13 @@ char	**ft_new_redir_str(char **new_strstr, char *str, int redir_no)
 		free(new_strstr);
 		return (NULL);
 	}
-	while (str[i] != '\0' && str[i] != ' ')
+	j = 0;
+	while (str[i + j] != '\0' && str[i + j] != ' ')
 	{
-		new_strstr[redir_no][i] = str[i];
-		i++;
+		new_strstr[redir_no][j] = str[i + j];
+		j++;
 	}
-	new_strstr[redir_no][i] = '\0';
+	new_strstr[redir_no][j] = '\0';
 	new_strstr[redir_no + 1] = NULL;
 	return (new_strstr);
 }

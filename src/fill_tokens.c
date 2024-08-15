@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:15:31 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/13 18:54:48 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/14 12:53:44 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ t_token	*ft_fill_tok(t_token *tok, t_cnst *consts, char *tok_str, int index)
 	{
 		free(tok_str);
 		ft_cleanup(tok, consts, errno);
+	}
+	if (tok[index].cmd[0] == NULL)
+	{
+		free(tok[index].cmd);
+		tok[index].cmd = NULL;
 	}
 	ft_redir_file(tok, consts, tok_str, index);
 	return (tok);
