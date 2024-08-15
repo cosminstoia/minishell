@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:49:14 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/15 16:40:48 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 19:45:54 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	ft_execute(t_token *tok, t_cnst *consts)
 	int	index;
 
 	pipefd[0] = -1;
-	pipefd[1] = -1;	
+	pipefd[1] = -1;
 	index = 0;
 	while (index < consts->tok_num)
 	{
