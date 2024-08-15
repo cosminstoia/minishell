@@ -23,6 +23,7 @@ int	main(int argc, char **argv, char **env)
 		exit(EXIT_FAILURE);
 	consts = ft_make_consts(consts, env);
 	ft_handle_sig();
+	update_shlvl(consts);
 	while (1)
 	{
 		consts->input = readline("minishell: ");

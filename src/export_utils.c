@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:02:08 by cstoia            #+#    #+#             */
-/*   Updated: 2024/07/30 14:21:02 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/14 15:38:29 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,7 @@ int	ft_check_var(t_token *tok, t_cnst *consts)
 	while (consts->environ[i])
 	{
 		if (ft_strncmp(consts->environ[i], tok->cmd[1],
-				ft_strlen(tok->cmd[1])) == 0
-			&& consts->environ[i][ft_strlen(tok->cmd[1])] == '=')
+				ft_strlen(tok->cmd[1])) == 0)
 		{
 			free(consts->environ[i]);
 			break ;

@@ -174,6 +174,9 @@ int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd, int index);
 /* redirections.c: function to handle the redirections */
 int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd, int index);
 
+/* shlvl.c: function to handle the shell level */
+void		update_shlvl(t_cnst *cnst);
+
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);
 void		ft_handle_sig_heredoc(void);

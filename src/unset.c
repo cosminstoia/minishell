@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:29:33 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/12 12:34:20 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/14 15:38:57 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	remove_env_var(char *var, char **environ)
 	len = ft_strlen(var);
 	while (environ[i])
 	{
-		if (ft_strncmp(environ[i], var, len) == 0 && environ[i][len] == '=')
+		if (ft_strncmp(environ[i], var, len) == 0)
 		{
 			free(environ[i]);
 			j = i;
