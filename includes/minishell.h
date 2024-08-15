@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/15 15:55:15 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 20:01:29 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include <stdio.h>             //needed for the readline library
-# include <errno.h> 			//needed for error numbers/messages
-# include <fcntl.h> 			//needed for open/read/write
+# include <stdio.h>  //needed for the readline library
+# include <errno.h> //needed for error numbers/messages
+# include <fcntl.h> //needed for open/read/write
 # include <limits.h>
 # include <readline/history.h>  //needed for history function
 # include <readline/readline.h> //needed for readline function
@@ -167,12 +167,15 @@ char		*ft_path_is_cmd(t_token *tok, t_cnst *consts, int index);
 void		ft_cmd_not_fnd(t_token *tok, t_cnst *consts, int index);
 
 /* redirections_utils.c: function to handle the redirections */
-int			ft_handle_infile(t_token *tok, t_cnst *consts, int in_fd, int index);
+int			ft_handle_infile(t_token *tok, t_cnst *consts, int in_fd,
+				int index);
 int			ft_redirect(t_token *tok, t_cnst *consts, int *pipefd, int index);
-int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd, int index);
+int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd,
+				int index);
 
 /* redirections.c: function to handle the redirections */
-int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd, int index);
+int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd,
+				int index);
 
 /* shlvl.c: function to handle the shell level */
 void		update_shlvl(t_cnst *cnst);
@@ -200,7 +203,8 @@ int			ft_token_num(char *input, int tok_num);
 /* unset.c functions to execute the unset function */
 void		ft_execute_unset(t_token *tok, t_cnst *consts);
 
-/* copy_redir_names.c: functions to copy the names of redirects into the relevant 2D array */
+/* copy_redir_names.c: functions to copy 
+the names of redirects into the relevant 2D array */
 char		**ft_cpy_redir(char **old_strstr, char *str);
 int			ft_redirnum(char **old_strstr, int redir_no);
 char		**ft_new_redir_str(char **new_strstr, char *str, int redir_no);

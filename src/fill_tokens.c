@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:15:31 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/14 12:53:44 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 20:09:06 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_redir_file(t_token *tok, t_cnst *consts, char *tok_str, int index)
 	}
 }
 
-int	ft_fill_redirs(t_token *tok, char *tok_str, int index)
+int	ft_handle_output_redirs(t_token *tok, char *tok_str, int index)
 {
 	int	i;
 
@@ -75,7 +75,15 @@ int	ft_fill_redirs(t_token *tok, char *tok_str, int index)
 		if (tok[index].out == NULL)
 			return (-1);
 	}
-	else if (tok_str[i] == '<' && tok_str[i + 1] == '<')
+	return (i);
+}
+
+int	ft_handle_input_redirs(t_token *tok, char *tok_str, int index)
+{
+	int	i;
+
+	i = 0;
+	if (tok_str[i] == '<' && tok_str[i + 1] == '<')
 	{
 		tok[index].heredoc = ft_cpy_redir(tok[index].heredoc, &tok_str[i + 2]);
 		if (tok[index].heredoc == NULL)
@@ -86,6 +94,23 @@ int	ft_fill_redirs(t_token *tok, char *tok_str, int index)
 	{
 		tok[index].in = ft_cpy_redir(tok[index].in, &tok_str[i + 1]);
 		if (tok[index].in == NULL)
+			return (-1);
+	}
+	return (i);
+}
+
+int	ft_fill_redirs(t_token *tok, char *tok_str, int index)
+{
+	int	i;
+
+	i = 0;
+	if (tok_str[i] == '>' || tok_str[i] == '<')
+	{
+		if (tok_str[i] == '>')
+			i = ft_handle_output_redirs(tok, tok_str, index);
+		else if (tok_str[i] == '<')
+			i = ft_handle_input_redirs(tok, tok_str, index);
+		if (i == -1)
 			return (-1);
 	}
 	return (i);

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 09:58:20 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/15 19:50:13 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 20:24:51 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts, int *pipefd, int index)
+static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts,
+		int *pipefd, int index)
 {
 	int	inflag;
 
@@ -36,7 +37,8 @@ static int	ft_handle_input_redirection(t_token *tok, t_cnst *consts, int *pipefd
 	return (1);
 }
 
-static int	ft_handle_output_redirection(t_token *tok, t_cnst *consts, int *pipefd, int index)
+static int	ft_handle_output_redirection(t_token *tok, t_cnst *consts,
+		int *pipefd, int index)
 {
 	int	outflag;
 

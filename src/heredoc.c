@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 13:15:48 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/15 19:55:42 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/15 20:07:20 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,10 @@ static void	ft_fd(t_token *tok, t_cnst *consts, int in_fd, int index)
 	g_got_sig = 0;
 }
 
-static int	ft_heredoc_utils(t_token *tok, t_cnst *consts, int in_fd, int index)
+static int	ft_heredoc_utils(t_token *tok, int in_fd, int index)
 {
 	char	*input;
 
-	(void)consts;//I assume this needs to be removed if we aren't using it??????????????????????????????????????????????????????
 	while (1)
 	{
 		input = readline("> ");
@@ -85,9 +84,11 @@ int	ft_handle_heredoc(t_token *tok, t_cnst *consts, int in_fd, int index)
 		consts->exit_code = 1;
 		return (0);
 	}
-	ft_heredoc_utils(tok, consts, in_fd, index);
+	ft_heredoc_utils(tok, in_fd, index);
 	ft_fd(tok, consts, in_fd, index);
-	if (tok[index].cmd && (!ft_strncmp("cat", tok[index].cmd[0], 4) || !ft_strncmp("grep", tok[index].cmd[0], 5) || !ft_strncmp("awk", tok[index].cmd[0], 4)))
+	if (tok[index].cmd && (!ft_strncmp("cat", tok[index].cmd[0], 4)
+			|| !ft_strncmp("grep", tok[index].cmd[0], 5) || !ft_strncmp("awk",
+				tok[index].cmd[0], 4)))
 		tok[index].cmd = ft_heredoc_cmd(tok, consts, index);
 	dup2(saved_stdin, STDIN_FILENO);
 	return (1);
