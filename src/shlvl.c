@@ -6,7 +6,7 @@
 /*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:24:49 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/14 19:51:12 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:51:41 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	ft_update_env(t_cnst *consts, int shlvl_index, char *new_shlvl_env)
 	}
 }
 
-void	update_shlvl(t_cnst *consts, char *input)
+void	update_shlvl(t_cnst *consts)
 {
 	int		shlvl_index;
 	int		shlvl;
@@ -64,8 +64,6 @@ void	update_shlvl(t_cnst *consts, char *input)
 	char	*new_shlvl_str;
 	int		total_len;
 
-	if (ft_strncmp(input, "./minishell", 11) != 0)
-		return ;
 	shlvl_index = find_env_index(consts->environ, "SHLVL");
 	shlvl = 0;
 	shlvl = ft_atoi(consts->environ[shlvl_index] + 6);

@@ -6,7 +6,7 @@
 /*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 16:23:04 by gstronge          #+#    #+#             */
-/*   Updated: 2024/08/14 19:26:16 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:48:56 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int			ft_handle_outfile(t_token *tok, t_cnst *consts, int out_fd);
 int			ft_handle_append(t_token *tok, t_cnst *consts, int out_fd);
 
 /* shlvl.c: function to handle the shell level */
-void		update_shlvl(t_cnst *cnst, char *input);
+void		update_shlvl(t_cnst *cnst);
 
 /* signals.c: function to handle the signals */
 void		ft_handle_sig(void);
