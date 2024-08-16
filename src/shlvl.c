@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shlvl.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:24:49 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/15 10:51:41 by cstoia           ###   ########.fr       */
+/*   Updated: 2024/08/16 13:31:04 by gstronge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	find_env_index(char **env, const char *var_name)
 	return (-1);
 }
 
-static void	ft_update_env(t_cnst *consts, int shlvl_index, char *new_shlvl_env)
+static char	**ft_update_env(t_cnst *consts, int shlvl_index, char *new_shlvl_env)
 {
 	int		i;
 	char	**new_environ;
@@ -44,16 +44,23 @@ static void	ft_update_env(t_cnst *consts, int shlvl_index, char *new_shlvl_env)
 	{
 		while (consts->environ[i])
 			i++;
-		new_environ = malloc(sizeof(char *) * (i + 2));
+		new_environ = (char **)malloc(sizeof(char *) * (i + 2));
 		if (!consts->environ)
 		{
-			perror("malloc failed");
 			free(new_shlvl_env);
-			return ;
+			ft_cleanup(NULL, consts, errno);
 		}
-		consts->environ[i] = new_shlvl_env;
-		consts->environ[i + 1] = NULL;
+		i = 0;
+		while (consts->environ[i])
+		{
+			new_environ[i] = consts->environ[i];
+			i++;
+		}
+		new_environ[i] = new_shlvl_env;
+		new_environ[i + 1] = NULL;
+		return (new_environ);
 	}
+	return (consts->environ);
 }
 
 void	update_shlvl(t_cnst *consts)
@@ -65,19 +72,19 @@ void	update_shlvl(t_cnst *consts)
 	int		total_len;
 
 	shlvl_index = find_env_index(consts->environ, "SHLVL");
-	shlvl = 0;
-	shlvl = ft_atoi(consts->environ[shlvl_index] + 6);
+	shlvl = 1;
 	if (shlvl_index != -1)
-		shlvl++;
+		shlvl = 1 + ft_atoi(consts->environ[shlvl_index] + 6);
 	new_shlvl_str = ft_itoa(shlvl);
 	total_len = ft_strlen("SHLVL=") + ft_strlen(new_shlvl_str) + 1;
-	new_shlvl_env = malloc(total_len);
+	new_shlvl_env = (char *)malloc(total_len * sizeof(char));
 	if (!new_shlvl_env)
 	{
 		perror("malloc failed");
-		return ;
+		ft_cleanup(NULL, consts, errno);
 	}
 	ft_strlcpy(new_shlvl_env, "SHLVL=", total_len);
 	ft_strlcat(new_shlvl_env, new_shlvl_str, total_len);
-	ft_update_env(consts, shlvl_index, new_shlvl_env);
+	consts->environ = ft_update_env(consts, shlvl_index, new_shlvl_env);
+	free(new_shlvl_str);
 }
