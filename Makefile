@@ -5,8 +5,7 @@ NAME        = minishell
 CC          = cc
 
 # Compiling flags
-CFLAGS      = -Wall -Werror -Wextra
-# CFLAGS      = -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS      = -Wall -Wextra -Werror
 
 # Includes
 INCLUDES    = includes/minishell.h
