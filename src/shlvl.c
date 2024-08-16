@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shlvl.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gstronge <gstronge@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cstoia <cstoia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:24:49 by cstoia            #+#    #+#             */
-/*   Updated: 2024/08/16 13:31:04 by gstronge         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:03:16 by cstoia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,37 @@ static int	find_env_index(char **env, const char *var_name)
 	return (-1);
 }
 
-static char	**ft_update_env(t_cnst *consts, int shlvl_index, char *new_shlvl_env)
+static char	**ft_new_environ(t_cnst *consts, char **new_environ,
+		char *new_shlvl_env)
 {
-	int		i;
-	char	**new_environ;
+	int	i;
 
 	i = 0;
+	while (consts->environ[i])
+		i++;
+	new_environ = (char **)malloc(sizeof(char *) * (i + 2));
+	if (!consts->environ)
+	{
+		free(new_shlvl_env);
+		ft_cleanup(NULL, consts, errno);
+	}
+	i = 0;
+	while (consts->environ[i])
+	{
+		new_environ[i] = consts->environ[i];
+		i++;
+	}
+	new_environ[i] = new_shlvl_env;
+	new_environ[i + 1] = NULL;
+	return (new_environ);
+}
+
+static char	**ft_update_env(t_cnst *consts, int shlvl_index,
+		char *new_shlvl_env)
+{
+	char	**new_environ;
+
+	new_environ = NULL;
 	if (shlvl_index != -1)
 	{
 		free(consts->environ[shlvl_index]);
@@ -42,22 +67,7 @@ static char	**ft_update_env(t_cnst *consts, int shlvl_index, char *new_shlvl_env
 	}
 	else
 	{
-		while (consts->environ[i])
-			i++;
-		new_environ = (char **)malloc(sizeof(char *) * (i + 2));
-		if (!consts->environ)
-		{
-			free(new_shlvl_env);
-			ft_cleanup(NULL, consts, errno);
-		}
-		i = 0;
-		while (consts->environ[i])
-		{
-			new_environ[i] = consts->environ[i];
-			i++;
-		}
-		new_environ[i] = new_shlvl_env;
-		new_environ[i + 1] = NULL;
+		new_environ = ft_new_environ(consts, new_environ, new_shlvl_env);
 		return (new_environ);
 	}
 	return (consts->environ);
